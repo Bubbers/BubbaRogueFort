@@ -33,7 +33,7 @@ void loadMeshes() {
   ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
 
   /* Load player mesh and attach it to the player GameObject */
-  Mesh *playerMesh = ResourceManager::loadAndFetchMesh("../meshes/player.obj");
+  Mesh *playerMesh = ResourceManager::loadAndFetchMesh("../meshes/player.fbx");
                                             // references are from the the build folder
 
   player = new GameObject(playerMesh);
