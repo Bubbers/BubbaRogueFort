@@ -1,1 +1,4 @@
 *.blend
+!*.obj
+
+*.xcf
