@@ -4,7 +4,6 @@
 #include <StandardRenderer.h>
 #include <Scene.h>
 #include <GameObject.h>
-#include <StdOutLogHandler.h>
 #include "ShaderProgram.h"
 #include "Window.h"
 #include "Renderer.h"
@@ -32,8 +31,6 @@ Scene scene;
 void loadMeshes() {
   /* Shader setup done once for all meshes that use it */
   ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
-  standardShader->setUniformBufferObjectBinding(UNIFORM_BUFFER_OBJECT_MATRICES_NAME,
-                                                UNIFORM_BUFFER_OBJECT_MATRICES_INDEX);
 
   /* Load player mesh and attach it to the player GameObject */
   Mesh *playerMesh = ResourceManager::loadAndFetchMesh("../meshes/player.obj");
@@ -57,13 +54,10 @@ void display(float timeSinceStart,float timeSinceLastCall) {
 }
 
 void resize(int newWidth, int newHeight) {
-    renderer->resize(newWidth, newHeight);
+  renderer->resize(newWidth, newHeight);
 }
 
 int main(int argc, char *argv[]) {
-  Logger::addLogHandler(new StdOutLogHandler());
-  Logger::setLogLevel(LogLevel::DEBUG);
-
   Window* win = new Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Bubba Rogue Fort");
 
   win->setResizeMethod(resize);
@@ -77,7 +71,6 @@ int main(int argc, char *argv[]) {
   setupCamera();
 
   win->start(60);
-
   return 0;
 }
 
