@@ -4,6 +4,16 @@
 *.o
 *.obj
 
+# Vim
+*.swo
+*.swp
+
+# CMake
+CMakeLists.txt.user
+
+# Build
+*build
+
 # Precompiled Headers
 *.gch
 *.pch
