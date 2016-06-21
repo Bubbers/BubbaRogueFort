@@ -37,3 +37,5 @@ CMakeLists.txt.user
 *.exe
 *.out
 *.app
+
+/idea/* 

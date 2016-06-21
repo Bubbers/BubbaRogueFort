@@ -4,11 +4,15 @@
 #include <Scene.h>
 #include <GameObject.h>
 #include "components/PlayerCamera.h"
+#include <MoveComponent.h>
+#include <ControlsManager.h>
+#include <KeyboardButton.h>
 #include "ShaderProgram.h"
 #include "Window.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "constants.h"
+#include <vector>
 
 Renderer *renderer;
 const int SCREEN_WIDTH = 640;
@@ -17,8 +21,25 @@ const int SCREEN_HEIGHT = 480;
 Camera *camera;
 static const float3 UP_VECTOR = make_vector(0.0f, 1.0f, 0.0f);
 
+
+
+// Globals
 GameObject *player;
 Scene scene;
+MoveComponent *moveComponent;
+enum Functions: int {MOVE_H,MOVE_V};
+
+void createLight(){
+
+  DirectionalLight directionalLight;
+  directionalLight.diffuseColor=make_vector(0.50f,0.50f,0.50f);
+  directionalLight.specularColor=make_vector(0.50f,0.50f,0.50f);
+  directionalLight.ambientColor=make_vector(0.50f,0.50f,0.50f);
+
+  directionalLight.direction=-make_vector(10.0f,10.0f,10.0f);
+  scene.directionalLight=directionalLight;
+
+}
 
 void loadMeshes() {
     /* Shader setup done once for all meshes that use it */
@@ -28,11 +49,6 @@ void loadMeshes() {
     Mesh *playerMesh = ResourceManager::loadAndFetchMesh("../meshes/player.fbx");
                                               // references are from the the build folder
 
-    player = new GameObject(playerMesh);
-    player->setLocation(make_vector(0.0f, 0.0f, 0.0f));
-    StandardRenderer* stdrenderer = new StandardRenderer(playerMesh, player, standardShader);
-    player->addRenderComponent(stdrenderer);
-    player->setDynamic(true);
 
     camera = new PlayerCamera(
                  make_vector(10.0f, 10.0f, 10.0f),
@@ -40,19 +56,131 @@ void loadMeshes() {
                  UP_VECTOR, 45, float(SCREEN_WIDTH) / float(SCREEN_HEIGHT),
                  0.1f, 50000.0f);
 
-    player->addComponent(camera);
+    /* Add the player to the scene */
+
+  for(int i=1;i<5;i++){
+    player = new GameObject(playerMesh);
+    player->setLocation(make_vector(0.50f, 0.50f,0.50f-i*5.0f));
+    StandardRenderer *stdrenderer = new StandardRenderer(playerMesh, player, standardShader);
+    player->addRenderComponent(stdrenderer);
+    player->setDynamic(true);
+
     /* Add the player to the scene */
     scene.addShadowCaster(player);
+  }
+
+
+
+  // character to move
+  player = new GameObject(playerMesh);
+  moveComponent = new MoveComponent(player);
+  player->addComponent(moveComponent);
+
+
+
+  player->setLocation(make_vector(0.50f, 0.50f,0.50f));
+  StandardRenderer *stdrenderer = new StandardRenderer(playerMesh, player, standardShader);
+  player->addRenderComponent(stdrenderer);
+  player->setDynamic(true);
+
+  /* Add the player to the scene */
+  scene.addShadowCaster(player);
+
+  player->addComponent(camera);
+
+
+
+
+
+    /* Load player mesh and attach it to the player GameObject */
+  Mesh *FloorMesh = ResourceManager::loadAndFetchMesh("../meshes/ground.obj");
+  // references are from the the build folder
+
+
+    GameObject* floor = new GameObject(FloorMesh);
+    floor->setLocation(make_vector(0.0f, 0.0f,0.0f));
+    StandardRenderer *floorrenderer = new StandardRenderer(FloorMesh, floor, standardShader);
+    floor->addRenderComponent(floorrenderer);
+    floor->setDynamic(true);
+
+    /* Add the player to the scene */
+    scene.addShadowCaster(floor);
+
+}
+void initKeyBindings(){
+  ControlsManager* cm = ControlsManager::getInstance();
+  cm->addBinding(MOVE_H,{new KeyboardButton(sf::Keyboard::D,sf::Keyboard::A)});
+  cm->addBinding(MOVE_V,{new KeyboardButton(sf::Keyboard::W,sf::Keyboard::S)});
+
 }
 
+
+void checkKeyboardKeys(){
+  ControlsManager*  cm = ControlsManager::getInstance();
+  ControlStatus   cs_H = cm->getStatus(MOVE_H);
+  ControlStatus   cs_V = cm->getStatus(MOVE_V);
+
+  if(cs_H.isActive() && cs_V.isActive())
+  {
+    if(cs_H.getValue()>0 && cs_V.getValue()<0)
+    {
+      moveComponent->setVelocity(make_vector(0.01f,0.0f,0.01f)/sqrtf(2));
+      player->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI/4));
+    }
+    else if(cs_H.getValue()>0 && cs_V.getValue()>0)
+    {
+      moveComponent->setVelocity(make_vector(0.01f,0.0f,-0.01f)/sqrtf(2));
+      player->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI/-4));
+    }
+    else if(cs_H.getValue()<0 && cs_V.getValue()<0)
+    {
+      moveComponent->setVelocity(make_vector(-0.01f,0.0f,0.01f)/sqrtf(2));
+      player->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI/-4));
+    }
+    else{
+      moveComponent->setVelocity(make_vector(-0.01f,0.0f,-0.01f)/sqrtf(2));
+      player->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI/4));
+    }
+  }
+  else if(cs_H.isActive())
+  {
+    if(cs_H.getValue()>0)
+    {
+      moveComponent->setVelocity(make_vector(0.01f,0.0f,0.0f));
+      player->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI/2));
+    }
+    else{
+      moveComponent->setVelocity(make_vector(-0.01f,0.0f,0.0f));
+      player->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI/-2));
+    }
+  }
+  else if(cs_V.isActive())
+  {
+    if(cs_V.getValue()<0) {
+      moveComponent->setVelocity(make_vector(0.0f,0.0f,0.01f));
+      //moveComponent->setRotation(make_quaternion(make_rotation_y<float4x4>(0.005f)));
+      player->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI));
+      //Quaternion rotation = player->getAbsoluteRotation();
+
+    }
+    else{
+      moveComponent->setVelocity(make_vector(0.0f,-0.0f,-0.01f));
+      player->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI/-1.0f));
+      //moveComponent->setRotationSpeed(make_quaternion(make_rotation_y<float4x4>(-0.005f)));
+    }
+  }
+  else if(!cs_H.isActive() && !cs_V.isActive()){
+    moveComponent->setVelocity(make_vector(0.0f,0.0f,0.0f));
+    //moveComponent->setRotationSpeed(make_quaternion(make_rotation_y<float4x4>(0.00000f)));
+  }
+}
+
+
 void idle(float timeSinceStart,float timeSinceLastCall) {
-    std::vector<GameObject*> *l = new std::vector<GameObject*>();
-    scene.update(timeSinceLastCall, l);
-    delete l;
-    float3   vec    = make_vector(0.0f, 0.1f, 0.0f);
-    float4x4 transl = make_translation(vec);
-    player->update(transl);
+
     camera->setLookAt(player->getAbsoluteLocation());
+  scene.update(timeSinceLastCall*1000,new std::vector<GameObject*>());
+  checkKeyboardKeys();
 }
 
 void display(float timeSinceStart,float timeSinceLastCall) {
@@ -75,7 +203,11 @@ int main(int argc, char *argv[]) {
 
     loadMeshes();
 
-    win->start(60);
-    return 0;
+    createLight();
+    initKeyBindings();
+
+
+  win->start(60);
+  return 0;
 }
 
