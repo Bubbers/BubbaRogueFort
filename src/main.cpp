@@ -17,7 +17,9 @@
 #include "IdentityCamera.h"
 #include "scenes/ExploreScene.h"
 #include <vector>
-#include <assimp/version.h>
+#include "level/LevelFileReader.h"
+#include "StdOutLogHandler.h"
+#include "controls.h"
 
 Renderer *renderer;
 const int SCREEN_WIDTH = 640;
@@ -27,6 +29,13 @@ Camera *camera;
 static const float3 UP_VECTOR = make_vector(0.0f, 1.0f, 0.0f);
 
 RogueFortScene* scene;
+
+
+void loadMeshes() {
+
+    scene = new StartScene();
+
+}
 
 void idle(float timeSinceStart,float timeSinceLastCall) {
   scene->update(timeSinceStart*1000.0f,new std::vector<GameObject*>());
@@ -45,7 +54,6 @@ void resize(int newWidth, int newHeight) {
 }
 
 int main(int argc, char *argv[]) {
-  printf("%d.%d\n",aiGetVersionMajor(),aiGetVersionMinor());
   Logger::addLogHandler(new StdOutLogHandler());
   Logger::setLogLevel(LogLevel::SEVERE);
   Window* win = new Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Bubba Rogue Fort");
