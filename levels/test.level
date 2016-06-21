@@ -4,10 +4,10 @@ Mesh         Box          ../meshes/box.obj
 Mesh         HouseMesh    ../meshes/house.obj
 Mesh         PineMesh     ../meshes/pine.obj
 
-# Type       MeshName     LX    LY   LZ      RX   RY   RZ    RA    SX   SY   SZ
-Collider     PineMesh     0.0f  0.0f 20.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
-Collider     PlayerMesh   20.0f 0.0f 0.0f    0.0f 1.0f 1.0f  1.6f  1.0f 1.0f 1.0f
-Collider     HouseMesh    50.0f -1.0f 0.0f    0.0f 1.0f 0.0f  3.0f  2.0f 2.0f 2.0f
+# Type       MeshName     Transparent   LX    LY   LZ      RX   RY   RZ    RA    SX   SY   SZ
+Collider     PineMesh     true          0.0f  0.0f 20.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
+Collider     PlayerMesh   false         20.0f 0.0f 0.0f    0.0f 1.0f 1.0f  1.6f  1.0f 1.0f 1.0f
+Collider     HouseMesh    false         50.0f -1.0f 0.0f    0.0f 1.0f 0.0f  3.0f  2.0f 2.0f 2.0f
 
 # Unupported objects generate warnings in the loggers
 UnsupportedLevelObject

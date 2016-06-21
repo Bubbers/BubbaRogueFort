@@ -17,18 +17,19 @@ void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &
         GameObject *g;
         if (firstWord == "Collider") {
             string mesh = lineWords[1];
-            float lx = std::stof(lineWords[2]);
-            float ly = std::stof(lineWords[3]);
-            float lz = std::stof(lineWords[4]);
+            bool   transparent = lineWords[2] == "true";
+            float lx = std::stof(lineWords[3]);
+            float ly = std::stof(lineWords[4]);
+            float lz = std::stof(lineWords[5]);
 
-            float rx = std::stof(lineWords[5]);
-            float ry = std::stof(lineWords[6]);
-            float rz = std::stof(lineWords[7]);
-            float ra = std::stof(lineWords[8]);
+            float rx = std::stof(lineWords[6]);
+            float ry = std::stof(lineWords[7]);
+            float rz = std::stof(lineWords[8]);
+            float ra = std::stof(lineWords[9]);
 
-            float sx = std::stof(lineWords[9]);
-            float sy = std::stof(lineWords[10]);
-            float sz = std::stof(lineWords[11]);
+            float sx = std::stof(lineWords[10]);
+            float sy = std::stof(lineWords[11]);
+            float sz = std::stof(lineWords[12]);
 
             g = new GameObject(meshMap[mesh]);
             g->setIdentifier(1);
@@ -42,7 +43,11 @@ void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &
             g->setRotation(make_quaternion_axis_angle(make_vector(rx, ry, rz), ra));
             g->setScale(make_vector(sx, sy, sz));
 
-            scene->addShadowCaster(g);
+            if (transparent) {
+                scene->addTransparentObject(g);
+            } else {
+                scene->addShadowCaster(g);
+            }
         } else if (firstWord == "Trigger") {
             string mesh  = lineWords[1];
             string type  = lineWords[2];
