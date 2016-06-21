@@ -61,7 +61,9 @@ Scene* LevelFileReader::read(const std::string &filename) {
     ifstream levelFile(filename.c_str());
     if (levelFile.is_open()) {
         while ( getline (levelFile,line) ) {
-            lines.push_back(line);
+            if (words(line).front().front() != '#') {
+                lines.push_back(line);
+            }
         }
         levelFile.close();
     }

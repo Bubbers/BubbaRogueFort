@@ -1,2 +1,4 @@
-Mesh PlayerMesh ../meshes/player.fbx
-GameObject Player PlayerMesh
+# Type       Name         Arguments
+
+Mesh         PlayerMesh   ../meshes/player.fbx
+GameObject   Player       PlayerMesh
