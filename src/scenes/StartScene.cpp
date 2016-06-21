@@ -5,16 +5,18 @@
 #include <TextLayout.h>
 #include <PositioningLayout.h>
 #include <FontManager.h>
-#include <HUDGraphic.h>
+
 #include <SFML/Window/Mouse.hpp>
 #include <iostream>
+#include <HUDGraphic.h>
 #include "StartScene.h"
 #include "HudRenderer.h"
-#include "../IdentityCamera.h"
+
 
 using namespace std::placeholders;
 
 StartScene::StartScene() {
+    camera = new IdentityCamera();
     GameObject* hud = new GameObject();
     hudRenderer = new HudRenderer();
 

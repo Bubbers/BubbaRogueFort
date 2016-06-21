@@ -10,16 +10,18 @@
 #include <ControlsManager.h>
 #include <KeyboardButton.h>
 #include "ExploreScene.h"
+#include "ColliderFactory.h"
 #include "../components/PlayerCamera.h"
-#include <controls.h>
-#include <ActionMenu.h>
+#include "../controls.h"
+#include "../ui/ActionMenu.h"
+
 
 float3 UP_VECTOR = make_vector(0.0f,1.0f,0.0f);
 
-ExploreScene::ExploreScene() {
+ExploreScene::ExploreScene() : RogueFortScene() {
 
-    initKeyBindings();
-
+    collider = ColliderFactory::getTwoPhaseCollider();
+    
     int width = Globals::get(Globals::WINDOW_WIDTH);
     int height = Globals::get(Globals::WINDOW_HEIGHT);
     camera = new PlayerCamera(
@@ -48,7 +50,7 @@ ExploreScene::ExploreScene() {
 
     // character to move
     player = new GameObject(playerMesh);
-    moveComponent = new MoveComponent(player);
+    moveComponent = new MoveComponentWithCollision(player);
     player->addComponent(moveComponent);
 
 
@@ -57,6 +59,8 @@ ExploreScene::ExploreScene() {
     StandardRenderer *stdrenderer = new StandardRenderer(playerMesh, player, standardShader);
     player->addRenderComponent(stdrenderer);
     player->setDynamic(true);
+    player->setIdentifier(0);
+    player->addCollidesWith(1);
 
     /* Add the player to the scene */
     addShadowCaster(player);
@@ -106,15 +110,9 @@ bool ExploreScene::changeScene() {
 void ExploreScene::update(float dt, std::vector<GameObject *> *toDelete) {
     RogueFortScene::update(dt,toDelete);
     checkKeyboardKeys();
+    collider->updateCollision(this);
 }
 
-void ExploreScene::initKeyBindings(){
-    ControlsManager* cm = ControlsManager::getInstance();
-    cm->clearBindings();
-    cm->addBinding(MOVE_H,{new KeyboardButton(sf::Keyboard::D,sf::Keyboard::A)});
-    cm->addBinding(MOVE_V,{new KeyboardButton(sf::Keyboard::W,sf::Keyboard::S)});
-
-}
 
 void ExploreScene::checkKeyboardKeys(){
     ControlsManager*  cm = ControlsManager::getInstance();

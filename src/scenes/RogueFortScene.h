@@ -11,6 +11,7 @@
 
 class RogueFortScene : public Scene{
 public:
+    RogueFortScene() : Scene() {}
     virtual Camera* getCamera() = 0;
     virtual bool changeScene() = 0;
     virtual void resize(int x, int y){}

@@ -7,7 +7,8 @@
 
 #include "Scene.h"
 #include "RogueFortScene.h"
-#include "../IdentityCamera.h"
+#include "../cameras/IdentityCamera.h"
+
 
 class Layout;
 class Font;
@@ -26,7 +27,7 @@ private:
     Font* playFont;
     HudRenderer* hudRenderer;
     bool playIsClicked = false;
-    Camera* camera = new IdentityCamera();
+    Camera* camera;
     static void hoverPlay(int x, int y, Layout* hoveringOn, bool enteringElseLeaving);
     void clickPlay(int x, int y, Layout* clickedOn,bool enteringElseLeaving);
 };

@@ -8,8 +8,12 @@
 
 #include <MoveComponent.h>
 #include "RogueFortScene.h"
+#include "../components/MoveComponentWithCollision.h"
 
 class Camera;
+
+
+class Collider;
 
 class ExploreScene : public RogueFortScene {
 public:
@@ -24,7 +28,8 @@ private:
     void checkKeyboardKeys();
     Camera* camera;
     GameObject* player;
-    MoveComponent* moveComponent;
+    MoveComponentWithCollision *moveComponent;
+    Collider *collider;
 };
 
 

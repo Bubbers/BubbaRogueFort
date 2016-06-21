@@ -31,12 +31,18 @@ void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &
             float sz = std::stof(lineWords[11]);
 
             g = new GameObject(meshMap[mesh]);
+            g->setIdentifier(1);
+            g->addCollidesWith(0);
+            g->setDynamic(true);
+
             StandardRenderer *stdrenderer =
                     new StandardRenderer(meshMap[mesh], g, standardShader);
             g->addRenderComponent(stdrenderer);
             g->setLocation(make_vector(lx, ly, lz));
             g->setRotation(make_quaternion_axis_angle(make_vector(rx, ry, rz), ra));
             g->setScale(make_vector(sx, sy, sz));
+
+            scene->addShadowCaster(g);
         } else if (firstWord == "Trigger") {
             string mesh  = lineWords[1];
             string type  = lineWords[2];
@@ -66,10 +72,12 @@ void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &
                 // Component for switching to the Scene provided by value
             }
 
+            scene->addShadowCaster(g);
+
         } else {
             Logger::logWarning(firstWord + " is not a supported Level object type");
         }
-        scene->addShadowCaster(g);
+
     }
 }
 
