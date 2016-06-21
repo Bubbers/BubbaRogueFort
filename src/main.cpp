@@ -21,8 +21,7 @@ RogueFortScene* scene;
 static const float3 UP_VECTOR = make_vector(0.0f, 1.0f, 0.0f);
 
 void loadMeshes() {
-    //scene = new StartScene();
-    scene = new ExploreScene();
+    scene = new StartScene();
 }
 
 
