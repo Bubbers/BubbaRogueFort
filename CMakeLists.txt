@@ -12,7 +12,14 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGLEW_STATIC")
 add_subdirectory(Bubba-3D)
 
 # Files to compile
-set(GAME_SOURCE_FILES src/main.cpp)
+set(GAME_SOURCE_FILES src/main.cpp
+        src/scenes/ExploreScene.cpp
+        src/scenes/ExploreScene.h
+        src/scenes/RogueFortScene.h
+        src/scenes/StartScene.h
+        src/scenes/StartScene.cpp
+        src/IdentityCamera.cpp
+        src/IdentityCamera.h)
 
 # Define the executable
 set(EXECUTABLE_NAME BubbaRogueFort)
