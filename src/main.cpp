@@ -13,6 +13,7 @@
 #include "ResourceManager.h"
 #include "constants.h"
 #include <vector>
+#include "level/LevelFileReader.h"
 
 Renderer *renderer;
 const int SCREEN_WIDTH = 640;
@@ -42,6 +43,9 @@ void createLight(){
 }
 
 void loadMeshes() {
+
+    scene = *(LevelFileReader::read("../levels/test.level"));
+
     /* Shader setup done once for all meshes that use it */
     ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
 
