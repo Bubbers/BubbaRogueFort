@@ -6,8 +6,8 @@
 #include <SFML/Window/Keyboard.hpp>
 #include <KeyboardButton.h>
 #include "MoveComponentWithCollision.h"
+#include "../controls.h"
 
-enum Functions: int {MOVE_H,MOVE_V};
 static const float3 UP_VECTOR = make_vector(0.0f, 1.0f, 0.0f);
 
 MoveComponentWithCollision::MoveComponentWithCollision(GameObject* gameObject) : MoveComponent(gameObject){
