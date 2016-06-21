@@ -6,6 +6,7 @@
 #define BUBBAROGUEFORT_EXPLORESCENE_H
 
 
+#include <MoveComponent.h>
 #include "RogueFortScene.h"
 
 class Camera;
@@ -15,10 +16,15 @@ public:
     ExploreScene();
     virtual Camera* getCamera();
     virtual bool changeScene();
+    virtual void update(float dt, std::vector<GameObject*> *toDelete);
 
 private:
+    void createLight();
+    void initKeyBindings();
+    void checkKeyboardKeys();
     Camera* camera;
     GameObject* player;
+    MoveComponent* moveComponent;
 };
 
 

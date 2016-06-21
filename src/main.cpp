@@ -1,10 +1,13 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
-#include <PerspectiveCamera.h>
 #include <StandardRenderer.h>
 #include <Scene.h>
 #include <GameObject.h>
 #include <StdOutLogHandler.h>
+#include "components/PlayerCamera.h"
+#include <MoveComponent.h>
+#include <ControlsManager.h>
+#include <KeyboardButton.h>
 #include "ShaderProgram.h"
 #include "Window.h"
 #include "Renderer.h"
@@ -13,6 +16,8 @@
 #include "scenes/StartScene.h"
 #include "IdentityCamera.h"
 #include "scenes/ExploreScene.h"
+#include <vector>
+#include <assimp/version.h>
 
 Renderer *renderer;
 const int SCREEN_WIDTH = 640;
@@ -21,7 +26,6 @@ const int SCREEN_HEIGHT = 480;
 Camera *camera;
 static const float3 UP_VECTOR = make_vector(0.0f, 1.0f, 0.0f);
 
-GameObject *player;
 RogueFortScene* scene;
 
 void idle(float timeSinceStart,float timeSinceLastCall) {
@@ -41,17 +45,17 @@ void resize(int newWidth, int newHeight) {
 }
 
 int main(int argc, char *argv[]) {
+  printf("%d.%d\n",aiGetVersionMajor(),aiGetVersionMinor());
   Logger::addLogHandler(new StdOutLogHandler());
   Logger::setLogLevel(LogLevel::SEVERE);
   Window* win = new Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Bubba Rogue Fort");
 
-  win->setResizeMethod(resize);
-  win->setIdleMethod(idle);
-  win->setDisplayMethod(display);
+    win->setResizeMethod(resize);
+    win->setIdleMethod(idle);
+    win->setDisplayMethod(display);
 
-  renderer = new Renderer();
-  renderer->initRenderer(SCREEN_WIDTH, SCREEN_HEIGHT);
-
+    renderer = new Renderer();
+    renderer->initRenderer(SCREEN_WIDTH, SCREEN_HEIGHT);
   scene = new StartScene();
 
   win->start(60);

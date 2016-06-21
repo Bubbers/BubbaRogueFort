@@ -19,11 +19,14 @@ set(GAME_SOURCE_FILES src/main.cpp
         src/scenes/StartScene.h
         src/scenes/StartScene.cpp
         src/IdentityCamera.cpp
-        src/IdentityCamera.h)
+        src/IdentityCamera.h
+        src/components/PlayerCamera.cpp
+        src/controls.h)
 
 # Define the executable
 set(EXECUTABLE_NAME BubbaRogueFort)
 add_executable(${EXECUTABLE_NAME} ${GAME_SOURCE_FILES})
+INCLUDE_DIRECTORIES(src)
 
 # Link in BUBBA-3D in the executable
 target_link_libraries(${EXECUTABLE_NAME} LINK_PUBLIC Bubba3D)
