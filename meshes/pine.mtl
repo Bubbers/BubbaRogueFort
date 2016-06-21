@@ -5,10 +5,12 @@ newmtl Pine
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
-Ks 0.000000 0.000000 0.000000
+Ks 0.100000 0.100000 0.100000
 Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 0.000000
-illum 1
+illum 2
 map_Kd pine.png
+map_Ks pine.png
+map_Ns pine.png
 map_d pine.png
