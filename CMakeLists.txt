@@ -14,7 +14,7 @@ add_subdirectory(Bubba-3D)
 # Files to compile
 set(GAME_SOURCE_FILES src/main.cpp
                       src/components/PlayerCamera.cpp
-                      src/level/LevelFileReader.cpp)
+                      src/level/LevelFileReader.cpp src/components/MoveComponentWithCollision.cpp src/components/MoveComponentWithCollision.h)
 
 # Define the executable
 set(EXECUTABLE_NAME BubbaRogueFort)
