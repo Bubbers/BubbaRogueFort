@@ -26,14 +26,14 @@ void loadMeshes() {
 
 
 void idle(float timeSinceStart,float timeSinceLastCall) {
-    scene->update(timeSinceStart,new std::vector<GameObject*>());
+    scene->update(timeSinceLastCall * 1000,new std::vector<GameObject*>());
     if(scene->changeScene()){
         scene = new ExploreScene();
     }
 }
 
 void display(float timeSinceStart,float timeSinceLastCall) {
-  renderer->drawScene(scene->getCamera(), scene->getScene(), timeSinceStart);
+  renderer->drawScene(scene->getCamera(), scene->getScene(), timeSinceLastCall * 1000);
 }
 
 void resize(int newWidth, int newHeight) {
