@@ -12,9 +12,7 @@ public:
     static Scene* read(const std::string& filename);
 
 private:
-    static void parseMeshes(const std::vector<std::string> &lines,
-                     std::unordered_map<std::string, Mesh*> &meshMap);
-    static void parseGameObjects(const std::vector<std::string> &lines,
+    static void parseObjects(const std::vector<std::vector<std::string>> &lines,
                           std::unordered_map<std::string, Mesh*> &meshMap,
                           Scene* scene);
 

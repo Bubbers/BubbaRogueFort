@@ -14,6 +14,7 @@
 #include "constants.h"
 #include <vector>
 #include "level/LevelFileReader.h"
+#include "StdOutLogHandler.h"
 
 Renderer *renderer;
 const int SCREEN_WIDTH = 640;
@@ -196,6 +197,8 @@ void resize(int newWidth, int newHeight) {
 }
 
 int main(int argc, char *argv[]) {
+    Logger::addLogHandler(new StdOutLogHandler());
+    Logger::setLogLevel(LogLevel::INFO);
     Window* win = new Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Bubba Rogue Fort");
 
     win->setResizeMethod(resize);

@@ -7,69 +7,72 @@
 LevelFileReader::LevelFileReader() {
 }
 
-void LevelFileReader::parseMeshes(const std::vector<std::string> &lines,
-                                  std::unordered_map<std::string, Mesh *> &meshMap) {
-    for (auto line : lines) {
-        std::vector<string> lineWords = words(line);
-        if (lineWords[0] == "Mesh") {
-            Mesh *m = ResourceManager::loadAndFetchMesh(lineWords[2]);
-            meshMap.insert({lineWords[1], m});
-        }
-    }
-}
-
-void LevelFileReader::parseGameObjects(const std::vector<std::string> &lines,
+void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &lines,
                       std::unordered_map<std::string, Mesh*> &meshMap, Scene* scene) {
-    for (auto line : lines) {
-        std::vector<string> lineWords = words(line);
-        if (lineWords[0] == "GameObject") {
-            GameObject *g;
-            const std::string name = lineWords[1];
 
-            /* Shader setup done once for all meshes that use it */
-            ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
+    ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
+    for (auto lineWords : lines) {
+        std::string firstWord = lineWords.front();
 
-            if (lineWords.size() == 2) {
-                g = new GameObject();
-            } else if (lineWords.size() > 2) {
-                string mesh = lineWords[2];
-                if (lineWords.size() == 3) {
-                    g = new GameObject(meshMap[mesh]);
-                } else if (lineWords.size() == 4) {
-                    string collider = lineWords[3];
-                    g = new GameObject(meshMap[mesh], meshMap[collider]);
-                }
-                StandardRenderer* stdrenderer = new StandardRenderer(meshMap[mesh], g, standardShader);
-                g->addRenderComponent(stdrenderer);
+        GameObject *g;
+        if (firstWord == "Collider") {
+            string mesh = lineWords[1];
+            float lx = std::stof(lineWords[2]);
+            float ly = std::stof(lineWords[3]);
+            float lz = std::stof(lineWords[4]);
 
-            } else {
-                exit(-1);
-            }
+            float rx = std::stof(lineWords[5]);
+            float ry = std::stof(lineWords[6]);
+            float rz = std::stof(lineWords[7]);
+            float ra = std::stof(lineWords[8]);
 
-            g->setLocation(make_vector(0.0f, 0.0f, 0.0f));
-            scene->addShadowCaster(g);
+            float sx = std::stof(lineWords[9]);
+            float sy = std::stof(lineWords[10]);
+            float sz = std::stof(lineWords[11]);
+
+            g = new GameObject(meshMap[mesh]);
+            StandardRenderer *stdrenderer =
+                    new StandardRenderer(meshMap[mesh], g, standardShader);
+            g->addRenderComponent(stdrenderer);
+            g->setLocation(make_vector(lx, ly, lz));
+            g->setRotation(make_quaternion_axis_angle(make_vector(rx, ry, rz), ra));
+            g->setScale(make_vector(sx, sy, sz));
+        } else {
+            Logger::logWarning(firstWord + " is not a supported Level object type");
         }
+        scene->addShadowCaster(g);
     }
 }
 
 Scene* LevelFileReader::read(const std::string &filename) {
     Scene* scene = new Scene();
     std::unordered_map<std::string, Mesh*> meshMap;
-    std::vector<std::string> lines;
+    std::vector<std::vector<std::string>> lines;
 
     std::string line;
     ifstream levelFile(filename.c_str());
     if (levelFile.is_open()) {
         while ( getline (levelFile,line) ) {
-            if (words(line).front().front() != '#') {
-                lines.push_back(line);
+            std::vector<std::string> lineWords = words(line);
+            std::string firstWord = lineWords.front();
+
+            if (firstWord.front() != '#' && lineWords.size() > 0) {
+                // Skip all comments and empty lines
+
+                if (firstWord == "Mesh") {
+                    // If we found a mesh we load it directly
+                    Mesh *m = ResourceManager::loadAndFetchMesh(lineWords[2]);
+                    meshMap.insert({lineWords[1], m});
+                } else {
+                    // Otherwise save it for later analysis after all meshes are loaded
+                    lines.push_back(lineWords);
+                }
             }
         }
         levelFile.close();
     }
 
-    parseMeshes(lines, meshMap);
-    parseGameObjects(lines, meshMap, scene);
+    parseObjects(lines, meshMap, scene);
 
     return scene;
 }

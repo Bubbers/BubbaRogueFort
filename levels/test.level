@@ -1,4 +1,8 @@
-# Type       Name         Arguments
-
+# Type       Name         Model
 Mesh         PlayerMesh   ../meshes/player.fbx
-GameObject   Player       PlayerMesh
+
+# Type       MeshName     LX    LY   LZ      RX   RY   RZ    RA    SX   SY   SZ
+Collider     PlayerMesh   0.0f  0.0f 20.0f   0.0f 1.0f 0.0f  0.0f  1.0f 2.0f 1.0f
+Collider     PlayerMesh   20.0f 0.0f 0.0f    0.0f 1.0f 1.0f  1.6f  1.0f 1.0f 1.0f
+
+UnsupportedLevelObject
