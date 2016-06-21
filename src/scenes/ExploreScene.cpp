@@ -12,6 +12,7 @@
 #include "ExploreScene.h"
 #include "../components/PlayerCamera.h"
 #include <controls.h>
+#include <ActionMenu.h>
 
 float3 UP_VECTOR = make_vector(0.0f,1.0f,0.0f);
 
@@ -72,6 +73,10 @@ ExploreScene::ExploreScene() {
     StandardRenderer *floorrenderer = new StandardRenderer(FloorMesh, floor, standardShader);
     floor->addRenderComponent(floorrenderer);
     floor->setDynamic(true);
+
+    GameObject* hud = new GameObject();
+    hud->addRenderComponent(new ActionMenu());
+    addTransparentObject(hud);
 
     /* Add the player to the scene */
     addShadowCaster(floor);

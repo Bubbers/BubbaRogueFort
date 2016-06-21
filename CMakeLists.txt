@@ -22,7 +22,9 @@ set(GAME_SOURCE_FILES src/main.cpp
         src/IdentityCamera.h
         src/components/PlayerCamera.cpp
         src/controls.h
-        src/level/LevelFileReader.cpp)
+        src/level/LevelFileReader.cpp
+        src/ActionMenu.cpp
+        src/ActionMenu.h)
 
 # Define the executable
 set(EXECUTABLE_NAME BubbaRogueFort)
