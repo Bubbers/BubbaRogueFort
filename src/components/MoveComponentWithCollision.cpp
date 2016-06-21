@@ -21,17 +21,14 @@ void MoveComponentWithCollision::initKeyBindings(){
 }
 
 void MoveComponentWithCollision::duringCollision(GameObject* collider) {
-    Logger::logInfo("durig");
 }
 
 
 void MoveComponentWithCollision::afterCollision(GameObject* collider) {
-    Logger::logInfo("after");
     this->isColliding = false;
 }
 
 void MoveComponentWithCollision::beforeCollision(GameObject *collider){
-    Logger::logInfo("befdoe");
     this->isColliding = true;
     this->setVelocity(-this->getVelocity());
 }
@@ -58,7 +55,7 @@ void MoveComponentWithCollision::checkKeyboardKeys(){
         else if(cs_H.getValue()>0 && cs_V.getValue()>0)
         {
             this->setVelocity(make_vector(0.01f,0.00f,-0.01f)/sqrtf(2));
-            owner->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI/-4));
+            owner->setRotation(make_quaternion_axis_angle(UP_VECTOR,3*M_PI/4));
         }
         else if(cs_H.getValue()<0 && cs_V.getValue()<0)
         {
@@ -67,7 +64,7 @@ void MoveComponentWithCollision::checkKeyboardKeys(){
         }
         else{
             this->setVelocity(make_vector(-0.01f,0.0f,-0.01f)/sqrtf(2));
-            owner->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI/4));
+            owner->setRotation(make_quaternion_axis_angle(UP_VECTOR,-3*M_PI/4));
         }
     }
     else if(cs_H.isActive())
@@ -87,7 +84,7 @@ void MoveComponentWithCollision::checkKeyboardKeys(){
         if(cs_V.getValue()<0) {
             this->setVelocity(make_vector(0.0f,0.0f,0.01f));
             //this->setRotation(make_quaternion(make_rotation_y<float4x4>(0.005f)));
-            owner->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI));
+            owner->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI*-2));
             //Quaternion rotation = owner->getAbsoluteRotation();
 
         }
