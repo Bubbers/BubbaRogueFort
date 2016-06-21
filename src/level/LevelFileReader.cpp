@@ -37,6 +37,35 @@ void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &
             g->setLocation(make_vector(lx, ly, lz));
             g->setRotation(make_quaternion_axis_angle(make_vector(rx, ry, rz), ra));
             g->setScale(make_vector(sx, sy, sz));
+        } else if (firstWord == "Trigger") {
+            string mesh  = lineWords[1];
+            string type  = lineWords[2];
+            string value = lineWords[3];
+            float lx = std::stof(lineWords[4]);
+            float ly = std::stof(lineWords[5]);
+            float lz = std::stof(lineWords[6]);
+
+            float rx = std::stof(lineWords[7]);
+            float ry = std::stof(lineWords[8]);
+            float rz = std::stof(lineWords[9]);
+            float ra = std::stof(lineWords[10]);
+
+            float sx = std::stof(lineWords[11]);
+            float sy = std::stof(lineWords[12]);
+            float sz = std::stof(lineWords[13]);
+
+            g = new GameObject(meshMap[mesh]);
+            g->setLocation(make_vector(lx, ly, lz));
+            g->setRotation(make_quaternion_axis_angle(make_vector(rx, ry, rz), ra));
+            g->setScale(make_vector(sx, sy, sz));
+
+            if (type == "BattleZone") {
+                // Add components that handle battle spawning when walking in the zone
+                // value can be used to determine what enemies to face
+            } else if( type == "SceneSwitch" ) {
+                // Component for switching to the Scene provided by value
+            }
+
         } else {
             Logger::logWarning(firstWord + " is not a supported Level object type");
         }
