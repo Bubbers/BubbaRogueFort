@@ -1,9 +1,9 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
-#include <PerspectiveCamera.h>
 #include <StandardRenderer.h>
 #include <Scene.h>
 #include <GameObject.h>
+#include "components/PlayerCamera.h"
 #include "ShaderProgram.h"
 #include "Window.h"
 #include "Renderer.h"
@@ -16,14 +16,6 @@ const int SCREEN_HEIGHT = 480;
 
 Camera *camera;
 static const float3 UP_VECTOR = make_vector(0.0f, 1.0f, 0.0f);
-
-void setupCamera() {
-  camera = new PerspectiveCamera(
-               make_vector(10.0f, 10.0f, 10.0f),
-               make_vector(0.0f, 0.0f, 0.0f),
-               UP_VECTOR, 45, float(SCREEN_WIDTH) / float(SCREEN_HEIGHT),
-               0.1f, 50000.0f);
-}
 
 GameObject *player;
 Scene scene;
@@ -42,11 +34,25 @@ void loadMeshes() {
   player->addRenderComponent(stdrenderer);
   player->setDynamic(true);
 
+    camera = new PlayerCamera(
+               make_vector(10.0f, 10.0f, 10.0f),
+               make_vector(0.0f, 0.0f, 0.0f),
+               UP_VECTOR, 45, float(SCREEN_WIDTH) / float(SCREEN_HEIGHT),
+               0.1f, 50000.0f);
+
+  player->addComponent(camera);
   /* Add the player to the scene */
   scene.addShadowCaster(player);
 }
 
 void idle(float timeSinceStart,float timeSinceLastCall) {
+    std::vector<GameObject*> *l = new std::vector<GameObject*>();
+    scene.update(timeSinceLastCall, l);
+    delete l;
+    float3   vec    = make_vector(0.0f, 0.1f, 0.0f);
+    float4x4 transl = make_translation(vec);
+    player->update(transl);
+    camera->setLookAt(player->getAbsoluteLocation());
 }
 
 void display(float timeSinceStart,float timeSinceLastCall) {
@@ -68,7 +74,6 @@ int main(int argc, char *argv[]) {
   renderer->initRenderer(SCREEN_WIDTH, SCREEN_HEIGHT);
 
   loadMeshes();
-  setupCamera();
 
   win->start(60);
   return 0;
