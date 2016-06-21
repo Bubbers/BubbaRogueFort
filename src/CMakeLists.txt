@@ -1,10 +1,12 @@
 
 # Files to compile
-set(GAME_SOURCE_FILES main.cpp)
+set(GAME_SOURCE_FILES main.cpp
+        controls.h)
 
 add_subdirectory(cameras)
 add_subdirectory(components)
 add_subdirectory(level)
+add_subdirectory(ui)
 add_subdirectory(scenes)
 
 # Define the executable

@@ -13,6 +13,8 @@
 #include "ColliderFactory.h"
 #include "../components/PlayerCamera.h"
 #include "../controls.h"
+#include "../ui/ActionMenu.h"
+
 
 float3 UP_VECTOR = make_vector(0.0f,1.0f,0.0f);
 
@@ -64,6 +66,10 @@ ExploreScene::ExploreScene() : RogueFortScene() {
     floor->addRenderComponent(floorrenderer);
     floor->setDynamic(true);
     floor->setIdentifier(1);
+
+    GameObject* hud = new GameObject();
+    hud->addRenderComponent(new ActionMenu());
+    addTransparentObject(hud);
 
     /* Add the player to the scene */
     addShadowCaster(floor);

@@ -11,3 +11,4 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGLEW_STATIC")
 # Compile BUBBA-3D
 add_subdirectory(Bubba-3D)
 add_subdirectory(src)
+
