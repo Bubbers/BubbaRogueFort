@@ -32,8 +32,6 @@ void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &
 
             g = new GameObject(meshMap[mesh]);
             g->setIdentifier(1);
-            g->addCollidesWith(0);
-            g->setDynamic(true);
 
             StandardRenderer *stdrenderer =
                     new StandardRenderer(meshMap[mesh], g, standardShader);
