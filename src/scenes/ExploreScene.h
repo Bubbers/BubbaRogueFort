@@ -24,8 +24,6 @@ public:
 
 private:
     void createLight();
-    void initKeyBindings();
-    void checkKeyboardKeys();
     Camera* camera;
     GameObject* player;
     MoveComponentWithCollision *moveComponent;

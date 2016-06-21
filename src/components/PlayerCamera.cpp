@@ -1,7 +1,7 @@
 #include "PlayerCamera.h"
 
 PlayerCamera::PlayerCamera(float3 offset, float3 lookAt, float3 up, float fov, float ratio, float nearPlane, float farPlane)
-    : Camera(make_vector(0.0f, 0.0f, 0.0f), lookAt, up, fov, ratio, nearPlane, farPlane) {
+    : Camera(offset, lookAt, up, fov, ratio, nearPlane, farPlane) {
     this->offset = offset;
 }
 
@@ -15,11 +15,11 @@ float4x4 PlayerCamera::getViewMatrix() {
 void PlayerCamera::update(float dt) {
     if (owner != nullptr) {
         this->m_vPosition = owner->getAbsoluteLocation() + this->offset;
+        setLookAt(owner->getAbsoluteLocation());
     }
 }
 
-float4x4 PlayerCamera::lookAt(const float3 &eye, const float3 &center, const float3 &up)
-{
+float4x4 PlayerCamera::lookAt(const float3 &eye, const float3 &center, const float3 &up) {
     float3 dir = chag::normalize(eye - center);
     float3 right = chag::normalize(cross(up, chag::normalize(dir)));
     float3 newup = chag::normalize(cross(dir, right));
