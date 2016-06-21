@@ -16,6 +16,9 @@
 using namespace std::placeholders;
 
 StartScene::StartScene() {
+
+    scene = new Scene();
+
     camera = new IdentityCamera();
     GameObject* hud = new GameObject();
     hudRenderer = new HudRenderer();
@@ -25,7 +28,7 @@ StartScene::StartScene() {
 
     hudRenderer->setLayout(createMenu());
     hud->addRenderComponent(hudRenderer);
-    addTransparentObject(hud);
+    scene->addTransparentObject(hud);
 }
 
 Layout* StartScene::createMenu() {

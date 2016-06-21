@@ -14,12 +14,14 @@
 #include "../components/PlayerCamera.h"
 #include "../controls.h"
 #include "../ui/ActionMenu.h"
+#include "../level/LevelFileReader.h"
 
 
 float3 UP_VECTOR = make_vector(0.0f,1.0f,0.0f);
 
 ExploreScene::ExploreScene() : RogueFortScene() {
 
+    scene = LevelFileReader::read("../levels/test.level");
     collider = ColliderFactory::getTwoPhaseCollider();
     
     int width = Globals::get(Globals::WINDOW_WIDTH);
@@ -45,7 +47,7 @@ ExploreScene::ExploreScene() : RogueFortScene() {
         player->setDynamic(true);
 
         /* Add the player to the scene */
-        addShadowCaster(player);
+        scene->addShadowCaster(player);
     }
 
     // character to move
@@ -63,7 +65,7 @@ ExploreScene::ExploreScene() : RogueFortScene() {
     player->addCollidesWith(1);
 
     /* Add the player to the scene */
-    addShadowCaster(player);
+    scene->addShadowCaster(player);
 
     player->addComponent(camera);
 
@@ -78,12 +80,13 @@ ExploreScene::ExploreScene() : RogueFortScene() {
     floor->addRenderComponent(floorrenderer);
     floor->setDynamic(true);
 
-    GameObject* hud = new GameObject();
-    hud->addRenderComponent(new ActionMenu());
-    addTransparentObject(hud);
+    GameObject* hudObj = new GameObject();
+    hud = new ActionMenu();
+    hudObj->addRenderComponent(hud);
+    scene->addTransparentObject(hudObj);
 
     /* Add the player to the scene */
-    addShadowCaster(floor);
+    scene->addShadowCaster(floor);
 
     createLight();
 
@@ -91,12 +94,18 @@ ExploreScene::ExploreScene() : RogueFortScene() {
 
 void ExploreScene::createLight() {
 
+    DirectionalLight directionalLight = DirectionalLight();
     directionalLight.diffuseColor=make_vector(0.50f,0.50f,0.50f);
     directionalLight.specularColor=make_vector(0.50f,0.50f,0.50f);
     directionalLight.ambientColor=make_vector(0.50f,0.50f,0.50f);
 
     directionalLight.direction=-make_vector(10.0f,10.0f,10.0f);
+    scene->directionalLight = directionalLight;
 
+}
+
+void ExploreScene::resize(int x, int y) {
+    hud->updateLayout();
 }
 
 Camera* ExploreScene::getCamera() {
@@ -110,7 +119,7 @@ bool ExploreScene::changeScene() {
 void ExploreScene::update(float dt, std::vector<GameObject *> *toDelete) {
     RogueFortScene::update(dt,toDelete);
     checkKeyboardKeys();
-    collider->updateCollision(this);
+    collider->updateCollision(scene);
 }
 
 

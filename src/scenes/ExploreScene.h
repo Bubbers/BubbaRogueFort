@@ -21,6 +21,7 @@ public:
     virtual Camera* getCamera();
     virtual bool changeScene();
     virtual void update(float dt, std::vector<GameObject*> *toDelete);
+    virtual void resize(int x, int y);
 
 private:
     void createLight();
@@ -30,6 +31,7 @@ private:
     GameObject* player;
     MoveComponentWithCollision *moveComponent;
     Collider *collider;
+    HudRenderer *hud;
 };
 
 

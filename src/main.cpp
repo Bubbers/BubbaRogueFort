@@ -46,7 +46,7 @@ void idle(float timeSinceStart,float timeSinceLastCall) {
 }
 
 void display(float timeSinceStart,float timeSinceLastCall) {
-  renderer->drawScene(scene->getCamera(), scene, timeSinceStart);
+  renderer->drawScene(scene->getCamera(), scene->getScene(), timeSinceStart);
 }
 
 void resize(int newWidth, int newHeight) {

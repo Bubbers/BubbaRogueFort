@@ -9,12 +9,22 @@
 #include <Camera.h>
 #include <Scene.h>
 
-class RogueFortScene : public Scene{
+class Scene;
+class Camera;
+class GameObject;
+
+class RogueFortScene{
 public:
-    RogueFortScene() : Scene() {}
-    virtual Camera* getCamera() = 0;
     virtual bool changeScene() = 0;
     virtual void resize(int x, int y){}
+    virtual void update(float dt, std::vector<GameObject*>* toDelete);
+
+    virtual Scene* getScene();
+    virtual Camera* getCamera();
+
+protected:
+    Scene* scene;
+    Camera* camera;
 };
 
 
