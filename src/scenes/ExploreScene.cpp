@@ -37,7 +37,7 @@ ExploreScene::ExploreScene() : RogueFortScene() {
     ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
 
     /* Load player mesh and attach it to the player GameObject */
-    Mesh *playerMesh = ResourceManager::loadAndFetchMesh("../meshes/monkey.obj");
+    Mesh *playerMesh = ResourceManager::loadAndFetchMesh("../meshes/bubba.obj");
     // references are from the the build folder
 
     // character to move
