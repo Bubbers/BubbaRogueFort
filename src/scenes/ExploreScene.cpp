@@ -15,6 +15,7 @@
 #include "../controls.h"
 #include "../ui/ActionMenu.h"
 #include "../level/LevelFileReader.h"
+#include "../logic/KidBandit.h"
 
 
 float3 UP_VECTOR = make_vector(0.0f,1.0f,0.0f);
@@ -69,7 +70,9 @@ ExploreScene::ExploreScene() : RogueFortScene() {
     floor->setIdentifier(1);
 
     GameObject* hudObj = new GameObject();
-    hud = new ActionMenu();
+    vector<Bandit*>* bandits = new vector<Bandit*>();
+    bandits->insert(bandits->end(),new KidBandit());
+    hud = new ActionMenu(bandits);
     hudObj->addRenderComponent(hud);
     scene->addTransparentObject(hudObj);
 

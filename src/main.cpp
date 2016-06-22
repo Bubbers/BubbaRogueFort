@@ -9,6 +9,7 @@
 #include "scenes/StartScene.h"
 #include "scenes/ExploreScene.h"
 #include "level/LevelFileReader.h"
+#include "logic/KidBandit.h"
 
 
 Renderer *renderer;
@@ -42,6 +43,9 @@ void resize(int newWidth, int newHeight) {
 }
 
 int main(int argc, char *argv[]) {
+
+    printf("%d\n",(new KidBandit())->performAttack("punch").damage);
+
     Logger::addLogHandler(new StdOutLogHandler());
     Logger::setLogLevel(LogLevel::INFO);
     Window* win = new Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Bubba Rogue Fort");
