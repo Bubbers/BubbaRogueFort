@@ -83,19 +83,14 @@ void MoveComponentWithCollision::checkKeyboardKeys(){
     {
         if(cs_V.getValue()<0) {
             this->setVelocity(make_vector(0.0f,0.0f,0.01f));
-            //this->setRotation(make_quaternion(make_rotation_y<float4x4>(0.005f)));
             owner->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI*-2));
-            //Quaternion rotation = owner->getAbsoluteRotation();
-
         }
         else{
             this->setVelocity(make_vector(0.0f,-0.0f,-0.01f));
             owner->setRotation(make_quaternion_axis_angle(UP_VECTOR,M_PI/-1.0f));
-            //this->setRotationSpeed(make_quaternion(make_rotation_y<float4x4>(-0.005f)));
         }
     }
     else if(!cs_H.isActive() && !cs_V.isActive()){
         this->setVelocity(make_vector(0.0f,0.0f,0.0f));
-        //this->setRotationSpeed(make_quaternion(make_rotation_y<float4x4>(0.00000f)));
     }
 }

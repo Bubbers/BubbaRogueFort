@@ -2,13 +2,14 @@
 #include "ResourceManager.h"
 #include "fstream"
 #include "constants.h"
+#include "../components/SceneSwitchOnCollisionComponent.h"
 #include <StandardRenderer.h>
 
 LevelFileReader::LevelFileReader() {
 }
 
 void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &lines,
-                      std::unordered_map<std::string, Mesh*> &meshMap, Scene* scene) {
+                      std::unordered_map<std::string, Mesh*> &meshMap, Scene* scene, RogueFortScene *rogueFortScene) {
 
     ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
     for (auto lineWords : lines) {
@@ -67,15 +68,19 @@ void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &
             g->setLocation(make_vector(lx, ly, lz));
             g->setRotation(make_quaternion_axis_angle(make_vector(rx, ry, rz), ra));
             g->setScale(make_vector(sx, sy, sz));
+            g->setIdentifier(3);
+            g->addCollidesWith(0);
 
             if (type == "BattleZone") {
                 // Add components that handle battle spawning when walking in the zone
                 // value can be used to determine what enemies to face
             } else if( type == "SceneSwitch" ) {
                 // Component for switching to the Scene provided by value
+                g->addComponent(new SceneSwitchOnCollisionComponent(rogueFortScene, value));
             }
 
             scene->addShadowCaster(g);
+
 
         } else {
             Logger::logWarning(firstWord + " is not a supported Level object type");
@@ -84,7 +89,7 @@ void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &
     }
 }
 
-Scene* LevelFileReader::read(const std::string &filename) {
+Scene* LevelFileReader::read(const std::string &filename, RogueFortScene *rogueFortScene) {
     Scene* scene = new Scene();
     std::unordered_map<std::string, Mesh*> meshMap;
     std::vector<std::vector<std::string>> lines;
@@ -112,7 +117,7 @@ Scene* LevelFileReader::read(const std::string &filename) {
         levelFile.close();
     }
 
-    parseObjects(lines, meshMap, scene);
+    parseObjects(lines, meshMap, scene, rogueFortScene);
 
     return scene;
 }

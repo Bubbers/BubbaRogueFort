@@ -6,8 +6,20 @@
 #define BUBBAROGUEFORT_SCENESWITCHONCOLLISIONCOMPONENT_H
 
 
-class SceneSwitchOnCollisionComponent {
+#include <IComponent.h>
+#include <Scene.h>
+#include <Collider.h>
+#include "../scenes/RogueFortScene.h"
 
+class SceneSwitchOnCollisionComponent : public IComponent{
+public:
+    SceneSwitchOnCollisionComponent(RogueFortScene *scene, std::string newSceneName);
+
+    void update(float dt);
+    virtual void beforeCollision(GameObject* collider) override ;
+private:
+    RogueFortScene *scene;
+    std::string newSceneName;
 };
 
 
