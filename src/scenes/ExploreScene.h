@@ -29,7 +29,7 @@ private:
     GameObject* player;
     MoveComponentWithCollision *moveComponent;
     Collider *collider;
-    ActionMenu *hud;
+
 };
 
 

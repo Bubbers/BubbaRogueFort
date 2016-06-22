@@ -37,7 +37,7 @@ ExploreScene::ExploreScene() : RogueFortScene() {
     ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
 
     /* Load player mesh and attach it to the player GameObject */
-    Mesh *playerMesh = ResourceManager::loadAndFetchMesh("../meshes/monkey.obj");
+    Mesh *playerMesh = ResourceManager::loadAndFetchMesh("../meshes/bubba.obj");
     // references are from the the build folder
 
     // character to move
@@ -56,13 +56,6 @@ ExploreScene::ExploreScene() : RogueFortScene() {
     scene->addShadowCaster(player);
 
     player->addComponent(camera);
-
-    GameObject* hudObj = new GameObject();
-    vector<Bandit*>* bandits = new vector<Bandit*>();
-    bandits->insert(bandits->end(),new KidBandit());
-    hud = new ActionMenu(bandits);
-    hudObj->addRenderComponent(hud);
-    scene->addTransparentObject(hudObj);
 
     createLight();
 }
@@ -86,7 +79,7 @@ void ExploreScene::createLight() {
 }
 
 void ExploreScene::resize(int x, int y) {
-    hud->updateLayout();
+
 }
 
 Camera* ExploreScene::getCamera() {
@@ -97,9 +90,7 @@ Camera* ExploreScene::getCamera() {
 void ExploreScene::update(float dt, std::vector<GameObject *> *toDelete) {
     RogueFortScene::update(dt,toDelete);
     collider->updateCollision(scene);
-    pair<string,Bandit*>* action = hud->pollAction();
-    if(action != nullptr){
-        Logger::logInfo("Action " + action->first + " performed by " + action->second->getName() + ".");
-    }
+
+
 }
 
