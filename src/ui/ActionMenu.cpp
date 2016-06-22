@@ -60,6 +60,12 @@ void ActionMenu::createAttacksButtons(Bandit *bandit) {
     buttonList->clearChildren();
     for(string attks : bandit->getAttacks())
         buttonList->addChild(createAttackButton(bandit,attks));
+    Layout* back = createClickButton("Back");
+    back->addClickListener([=](int x, int y, Layout* clicked, bool enteringElseLeaving) -> void {
+        if(!enteringElseLeaving)
+            backToBandits = true;
+    });
+    buttonList->addChild(back);
 }
 
 Layout* ActionMenu::createAttackButton(Bandit *bandit, std::string attack) {

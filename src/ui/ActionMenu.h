@@ -21,7 +21,7 @@ public:
     /**
      * If an action has been performed, the pair will
      * contain the name of the attack performed and the bandit.
-     * If no action has benn performed 'nullptr' will be returned.
+     * If no action has been performed 'nullptr' will be returned.
      */
     std::pair<string,Bandit*>* pollAction();
 
