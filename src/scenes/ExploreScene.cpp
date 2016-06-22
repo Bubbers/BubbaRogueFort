@@ -97,5 +97,9 @@ Camera* ExploreScene::getCamera() {
 void ExploreScene::update(float dt, std::vector<GameObject *> *toDelete) {
     RogueFortScene::update(dt,toDelete);
     collider->updateCollision(scene);
+    pair<string,Bandit*>* action = hud->pollAction();
+    if(action != nullptr){
+        Logger::logInfo("Action " + action->first + " performed by " + action->second->getName() + ".");
+    }
 }
 

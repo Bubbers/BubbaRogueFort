@@ -16,6 +16,7 @@ using namespace std;
 
 ActionMenu::ActionMenu(vector<Bandit*>* banditsInPlay) {
 
+    bandits = banditsInPlay;
     font = FontManager::getInstance()->loadAndFetchFont("../fonts/Ubuntu-M.ttf",20);
 
     PositioningLayout* root = new PositioningLayout(Dimension::fromPercentage(100),Dimension::fromPercentage(100));
@@ -24,7 +25,7 @@ ActionMenu::ActionMenu(vector<Bandit*>* banditsInPlay) {
     botBar->setBackground((new HUDGraphic(HUDGraphic::Color(string("#2E4172"))))->setBorder(3, 0, 0, 0, HUDGraphic::Color(string("#162955"))));
 
     buttonList = new ListLayout(ListLayout::HORIZONTAL, Dimension::fromPercentage(90),Dimension::fromPercentage(50));
-    createBanditButtons(banditsInPlay);
+    createBanditButtons();
     botBar->addChild(buttonList,Dimension::fromPercentage(5),Dimension::fromPercentage(25));
 
     root->addChild(botBar, Dimension::fromPixels(0), Dimension::fromPercentagePlusPixels(100, -103));
@@ -33,27 +34,62 @@ ActionMenu::ActionMenu(vector<Bandit*>* banditsInPlay) {
 
 }
 
-void ActionMenu::createBanditButtons(std::vector<Bandit *> *banditsInPlay) {
-    for(auto banditIt : *banditsInPlay){
+void ActionMenu::createBanditButtons() {
+    for(auto banditIt : *bandits){
         buttonList->addChild(createActionButton(banditIt));
     }
 }
 
 void ActionMenu::update(float dt) {
+    HudRenderer::update(dt);
     if(openAttackMenu != nullptr){
         buttonList->clearChildren();
-        createActionButton(nullptr);
+        createAttacksButtons(openAttackMenu);
+        openAttackMenu = nullptr;
+        updateLayout();
+    }
+    if(backToBandits){
+        backToBandits = false;
+        buttonList->clearChildren();
+        createBanditButtons();
+        updateLayout();
     }
 }
 
+void ActionMenu::createAttacksButtons(Bandit *bandit) {
+    buttonList->clearChildren();
+    for(string attks : bandit->getAttacks())
+        buttonList->addChild(createAttackButton(bandit,attks));
+}
+
+Layout* ActionMenu::createAttackButton(Bandit *bandit, std::string attack) {
+    Layout* butt = createClickButton(attack);
+    butt->addClickListener(clickedOnAttack(bandit,attack));
+    return butt;
+}
+
+Layout::EventFunction ActionMenu::clickedOnAttack(Bandit *bandit, string attack) {
+    return [=](int x, int y, Layout* clickedOn, bool enteringElseLeaving) -> void{
+        if(!enteringElseLeaving) {
+            actionPerformed = new pair<string, Bandit *>(attack, bandit);
+            backToBandits = true;
+        }
+    };
+}
+
 Layout* ActionMenu::createActionButton(Bandit* bandit) {
-    TextLayout* butt = new TextLayout(bandit->getName(),font,Dimension::fill(),Dimension::fill());
+    Layout* butt = createClickButton(bandit->getName());
+    butt->addClickListener(openAttacksOnClick(bandit));
+    return butt;
+
+}
+Layout* ActionMenu::createClickButton(string name) {
+    TextLayout* butt = new TextLayout(name,font,Dimension::fill(),Dimension::fill());
     butt->setPadding(12);
     butt->setBackground(new HUDGraphic(HUDGraphic::Color("#4F628E")));
     butt->getGraphic()->setBorder(2,HUDGraphic::Color("#162955"));
-    butt->addHoverListener(onActionHover)->addClickListener(onActionClick)->addClickListener(openAttacksOnClick(bandit));
+    butt->addHoverListener(onActionHover)->addClickListener(onActionClick);
     return butt;
-
 }
 
 void ActionMenu::onActionHover(int x, int y, Layout *hoveredOn, bool enteredElseLeaving) {
@@ -71,6 +107,13 @@ void ActionMenu::onActionClick(int x, int y, Layout *clickedOn, bool enteredElse
 
 Layout::EventFunction ActionMenu::openAttacksOnClick(Bandit *bandit) {
     return [=,bandit](int x, int y, Layout *clickedOn, bool enteredElseLeaving) -> void {
-        //openAttackMenu = bandit;
+        if(!enteredElseLeaving)
+            openAttackMenu = bandit;
     };
+}
+
+std::pair<string,Bandit*>* ActionMenu::pollAction() {
+    pair<string,Bandit*>* temp = actionPerformed;
+    actionPerformed = nullptr;
+    return temp;
 }

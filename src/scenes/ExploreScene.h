@@ -14,6 +14,7 @@ class Camera;
 
 
 class Collider;
+class ActionMenu;
 
 class ExploreScene : public RogueFortScene {
 public:
@@ -28,7 +29,7 @@ private:
     GameObject* player;
     MoveComponentWithCollision *moveComponent;
     Collider *collider;
-    HudRenderer *hud;
+    ActionMenu *hud;
 };
 
 
