@@ -3,14 +3,21 @@ Mesh         PlayerMesh   ../meshes/player.fbx
 Mesh         Box          ../meshes/box.obj
 Mesh         HouseMesh    ../meshes/house.obj
 Mesh         PineMesh     ../meshes/pine.obj
+Mesh         Ground       ../meshes/ground.obj
+Mesh         Streetlamp   ../meshes/streetlamp.obj
 
 # Type       MeshName     Transparent   LX    LY   LZ      RX   RY   RZ    RA    SX   SY   SZ
 Collider     PineMesh     true          0.0f  0.0f 20.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
-Collider     PlayerMesh   false         20.0f 0.0f 0.0f    0.0f 1.0f 1.0f  1.6f  1.0f 1.0f 1.0f
-Collider     HouseMesh    false         50.0f -1.0f 0.0f    0.0f 1.0f 0.0f  3.0f  2.0f 2.0f 2.0f
+Collider     PineMesh     true          0.0f  0.0f 22.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
+Collider     PineMesh     true          2.0f  0.0f 26.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
+Collider     PlayerMesh   false         -10.0f 5.0f 0.0f    0.0f 1.0f 1.0f  1.6f  1.0f 1.0f 1.0f
+Collider     HouseMesh    false         50.0f -1.0f 0.0f    0.0f 1.0f 0.0f  3.0f  3.0f 3.0f 3.0f
+Collider     Ground       false         0.0f  0.0f 0.0f    0.0f 1.0f 0.0f  0.0f  100.0f 100.0f 100.0f
+Collider     Streetlamp   false         20.0f  0.0f 0.0f    0.0f 1.0f 0.0f  1.6f  1.5f 1.5f 1.5f
+# Collider     Box          false         44.0f  0.0f 6.0f      0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
 
 # Unupported objects generate warnings in the loggers
 UnsupportedLevelObject
 
 # Type       MeshName     Type         Value           LX    LY   LZ      RX   RY   RZ    RA    SX   SY   SZ
-Trigger      Box          BattleZone   MonsterGroup1   0.0f  0.0f 20.0f   0.0f 1.0f 0.0f  0.0f  1.0f 2.0f 1.0f
+Trigger      Box          SceneSwitch  BattleScene   44.0f  0.0f 6.0f      0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f

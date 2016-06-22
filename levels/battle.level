@@ -3,9 +3,10 @@ Mesh         PineMesh     ../meshes/pine.obj
 Mesh         Ground       ../meshes/ground.obj
 
 # Type       MeshName     Transparent   LX    LY   LZ      RX   RY   RZ    RA    SX   SY   SZ
-Collider     PineMesh     true          0.0f  0.0f 20.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
-Collider     PineMesh     true          0.0f  0.0f 22.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
-Collider     PineMesh     true          2.0f  0.0f 26.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
+Collider     PineMesh     true          -5.0f  0.0f -15.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
+Collider     PineMesh     true          0.0f  0.0f -13.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
+Collider     PineMesh     true          2.0f  0.0f -17.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
+Collider     PineMesh     true          13.0f  0.0f -17.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
 Collider     Ground       false         0.0f  0.0f 0.0f    0.0f 1.0f 0.0f  0.0f  100.0f 100.0f 100.0f
 
 # Unupported objects generate warnings in the loggers
