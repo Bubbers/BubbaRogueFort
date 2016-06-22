@@ -11,6 +11,7 @@
 #include <HUDGraphic.h>
 #include "StartScene.h"
 #include "HudRenderer.h"
+#include "constants.h"
 
 
 using namespace std::placeholders;
@@ -56,18 +57,16 @@ void StartScene::hoverPlay(int x, int y, Layout* hoveringOn, bool enteringElseLe
 void StartScene::clickPlay(int x, int y, Layout *clickedOn, bool enteringElseLeaving) {
     clickedOn->getGraphic()->setBackground(HUDGraphic::Color(enteringElseLeaving ? "#333" : "#aaa"));
     clickedOn->updateGraphic();
-    if(!enteringElseLeaving)
-        playIsClicked = true;
+    if(!enteringElseLeaving) {
+        requestSceneChange(EXPLORE_SCENE);
+    }
 }
 
 Camera* StartScene::getCamera() {
     return camera;
 }
 
-bool StartScene::changeScene() {
-    return playIsClicked;
-}
-
 void StartScene::resize(int x, int y) {
     hudRenderer->updateLayout();
 }
+

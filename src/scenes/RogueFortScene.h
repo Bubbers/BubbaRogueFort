@@ -15,16 +15,29 @@ class GameObject;
 
 class RogueFortScene{
 public:
-    virtual bool changeScene() = 0;
+    virtual void requestSceneChange(std::string newSceneName);
+    virtual bool changeScene();
+    void setShouldChangeScene(bool newValue);
+
+    virtual void sceneEntry() {};
+    virtual void sceneExit()  {};
+
     virtual void resize(int x, int y){}
     virtual void update(float dt, std::vector<GameObject*>* toDelete);
 
     virtual Scene* getScene();
     virtual Camera* getCamera();
 
+    std::string getNewSceneName();
+
+
+
 protected:
     Scene* scene;
     Camera* camera;
+
+    std::string newSceneName;
+    bool shouldChangeScene = false;
 };
 
 

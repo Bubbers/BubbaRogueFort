@@ -18,7 +18,6 @@ class StartScene : public RogueFortScene {
 public:
     StartScene();
     virtual Camera* getCamera();
-    virtual bool changeScene();
     virtual void resize(int x, int y);
 
 private:
