@@ -19,7 +19,6 @@ class ExploreScene : public RogueFortScene {
 public:
     ExploreScene();
     virtual Camera* getCamera();
-    virtual bool changeScene();
     virtual void update(float dt, std::vector<GameObject*> *toDelete);
     virtual void resize(int x, int y);
 

@@ -9,36 +9,29 @@
 #include "scenes/StartScene.h"
 #include "scenes/ExploreScene.h"
 #include "level/LevelFileReader.h"
+#include "scenes/SceneHandler.h"
 
 
 Renderer *renderer;
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-RogueFortScene* scene;
-
 
 static const float3 UP_VECTOR = make_vector(0.0f, 1.0f, 0.0f);
 
-void loadMeshes() {
-    scene = new StartScene();
-}
-
+SceneHandler *sceneHandler;
 
 void idle(float timeSinceStart,float timeSinceLastCall) {
-    scene->update(timeSinceLastCall * 1000,new std::vector<GameObject*>());
-    if(scene->changeScene()){
-        scene = new ExploreScene();
-    }
+    sceneHandler->idle(timeSinceStart, timeSinceLastCall);
 }
 
 void display(float timeSinceStart,float timeSinceLastCall) {
-  renderer->drawScene(scene->getCamera(), scene->getScene(), timeSinceLastCall * 1000);
+  renderer->drawScene(sceneHandler->getCurrentScene()->getCamera(), sceneHandler->getCurrentScene()->getScene(), timeSinceLastCall * 1000);
 }
 
 void resize(int newWidth, int newHeight) {
     renderer->resize(newWidth, newHeight);
-    scene->resize(newWidth,newHeight);
+    sceneHandler->resize(newWidth, newHeight);
 }
 
 int main(int argc, char *argv[]) {
@@ -53,7 +46,7 @@ int main(int argc, char *argv[]) {
     renderer = new Renderer();
     renderer->initRenderer(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    loadMeshes();
+    sceneHandler = new SceneHandler;
 
     win->start(60);
     return 0;
