@@ -7,6 +7,7 @@
 
 
 #include "RogueFortScene.h"
+#include "../ui/ActionMenu.h"
 
 class BattleScene : public RogueFortScene {
 public:
@@ -20,6 +21,7 @@ private:
 
     void createLight();
 
+    ActionMenu *hud;
     Camera* camera;
 };
 

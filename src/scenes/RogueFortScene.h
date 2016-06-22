@@ -19,8 +19,8 @@ public:
     virtual bool changeScene();
     void setShouldChangeScene(bool newValue);
 
-    virtual void sceneEntry() {};
-    virtual void sceneExit()  {};
+    virtual void sceneEntry(GameObject* player, Camera *camera) {};
+    virtual void sceneExit(GameObject* player , Camera *camera)  {};
 
     virtual void resize(int x, int y){}
     virtual void update(float dt, std::vector<GameObject*>* toDelete);

@@ -23,6 +23,9 @@ public:
     virtual void update(float dt, std::vector<GameObject*> *toDelete);
     virtual void resize(int x, int y);
 
+    virtual void sceneEntry(GameObject* player, Camera *camera);
+    virtual void sceneExit(GameObject* player, Camera *camera) ;
+
 private:
     void createLight();
     Camera* camera;

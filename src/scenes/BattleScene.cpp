@@ -3,9 +3,15 @@
 //
 
 #include <Globals.h>
+#include <ResourceManager.h>
+#include <StandardRenderer.h>
+#include <constants.h>
 #include "BattleScene.h"
 #include "../level/LevelFileReader.h"
 #include "../components/PlayerCamera.h"
+#include "../ui/ActionMenu.h"
+#include "../logic/KidBandit.h"
+#include "constants.h"
 
 
 BattleScene::BattleScene() {
@@ -19,6 +25,27 @@ BattleScene::BattleScene() {
             make_vector(0.0f,1.0f,0.0f), 45, float(width) / float(height),
             0.1f, 50000.0f);
     createLight();
+
+    for(int i = 0; i < 4; i++) {
+        Mesh *monsterMesh = ResourceManager::loadAndFetchMesh("../meshes/monkey.obj");
+        GameObject *monster = new GameObject(monsterMesh);
+        monster->setLocation(make_vector(-10.0f, 0.0f, i * 4.0f - 6.0f));
+        monster->setRotation(make_quaternion_axis_angle(make_vector(0.0f, 1.0f, 0.0f), M_PI / 2));
+
+        ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
+        StandardRenderer *stdrenderer = new StandardRenderer(monsterMesh, monster, standardShader);
+        monster->addRenderComponent(stdrenderer);
+        scene->addShadowCaster(monster);
+    }
+
+    GameObject* hudObj = new GameObject();
+    vector<Bandit*>* bandits = new vector<Bandit*>();
+    bandits->insert(bandits->end(),new KidBandit());
+    hud = new ActionMenu(bandits);
+    hudObj->addRenderComponent(hud);
+    scene->addTransparentObject(hudObj);
+
+
 }
 
 void BattleScene::createLight() {
@@ -50,4 +77,8 @@ Camera* BattleScene::getCamera() {
 
 void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
     RogueFortScene::update(dt,toDelete);
+    pair<string,Bandit*>* action = hud->pollAction();
+    if(action != nullptr){
+        requestSceneChange(EXPLORE_SCENE);
+    }
 }

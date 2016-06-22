@@ -7,5 +7,6 @@
 
 #define EXPLORE_SCENE "ExploreScene"
 #define START_SCENE   "StartScene"
+#define BATTLE_SCENE  "BattleScene"
 
 #endif //BUBBAROGUEFORT_CONSTANTS_H

@@ -5,28 +5,34 @@
 #include "SceneHandler.h"
 #include "StartScene.h"
 #include "ExploreScene.h"
+#include "constants.h"
+#include "BattleScene.h"
 
-SceneHandler::SceneHandler() {
+SceneHandler::SceneHandler(GameObject* player , Camera *camera) {
     startScene = new StartScene();
     explorerScene = new ExploreScene();
 
     scene = startScene;
+    this->player = player;
+    this->camera = camera;
 }
 
 void SceneHandler::idle(float timeSinceStart,float timeSinceLastCall) {
     scene->update(timeSinceLastCall * 1000,new std::vector<GameObject*>());
     if(scene->changeScene()){
 
-        scene->sceneExit();
+        scene->sceneExit(player, camera);
 
         std::string newSceneName = scene->getNewSceneName();
-        if(newSceneName == "ExploreScene") {
+        if(newSceneName == EXPLORE_SCENE) {
             scene = explorerScene;
-        } else if (newSceneName == "StartScene") {
+        } else if (newSceneName == START_SCENE) {
             scene = startScene;
+        } else if(newSceneName == BATTLE_SCENE) {
+            scene = new BattleScene();
         }
 
-        scene->sceneEntry();
+        scene->sceneEntry(player, camera);
 
         scene->setShouldChangeScene(false);
     }
