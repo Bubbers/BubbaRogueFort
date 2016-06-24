@@ -29,7 +29,7 @@ BattleScene::BattleScene() {
     createLight();
 
     for(int i = 0; i < 4; i++) {
-        Mesh *monsterMesh = ResourceManager::loadAndFetchMesh("../meshes/monkey.obj");
+        Mesh *monsterMesh = ResourceManager::loadAndFetchMesh("../meshes/monster.obj");
         GameObject *monster = new GameObject(monsterMesh);
         monster->setLocation(make_vector(-10.0f, 0.0f, i * 4.0f - 6.0f));
         monster->setRotation(make_quaternion_axis_angle(make_vector(0.0f, 1.0f, 0.0f), M_PI / 2));

@@ -1,5 +1,4 @@
 # Type       Name         Model
-Mesh         PlayerMesh   ../meshes/player.fbx
 Mesh         PineMesh     ../meshes/pine.obj
 Mesh         Ground       ../meshes/ground.obj
 
@@ -8,7 +7,6 @@ Collider     PineMesh     true          -5.0f  0.0f -15.0f   0.0f 1.0f 0.0f  0.0
 Collider     PineMesh     true          0.0f  0.0f -13.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
 Collider     PineMesh     true          2.0f  0.0f -17.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
 Collider     PineMesh     true          13.0f  0.0f -17.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
-Collider     PlayerMesh   true          13.0f  0.0f -10.0f   0.0f 1.0f 0.0f  0.0f  1.0f 1.0f 1.0f
 Collider     Ground       false         0.0f  0.0f 0.0f    0.0f 1.0f 0.0f  0.0f  100.0f 100.0f 100.0f
 
 # Unupported objects generate warnings in the loggers
