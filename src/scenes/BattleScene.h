@@ -8,6 +8,8 @@
 
 #include "RogueFortScene.h"
 #include "../ui/ActionMenu.h"
+#include "../logic/Enemy.h"
+#include "../logic/KidBandit.h"
 
 class BattleScene : public RogueFortScene {
 public:
@@ -17,12 +19,21 @@ public:
     virtual void update(float dt, std::vector<GameObject*> *toDelete);
     virtual void resize(int x, int y);
 
+    virtual void sceneEntry(Player* player, Camera* camera);
+
 private:
 
     void createLight();
+    int getRandomIndex(int size);
+    void placePlayerFighters();
+
+    std::vector<Enemy*>* enemies;
+    Player* player;
 
     ActionMenu *hud;
     Camera* camera;
+
+    bool playersTurnElseEnemies = true;
 };
 
 

@@ -10,7 +10,7 @@
 
 class SceneHandler {
 public:
-    SceneHandler(GameObject* player, Camera *camera);
+    SceneHandler(Player* player, Camera* camera);
 
     void idle(float timeSinceStart,float timeSinceLastCall);
 
@@ -22,7 +22,7 @@ private:
     RogueFortScene *startScene;
     RogueFortScene *explorerScene;
 
-    GameObject *player;
+    Player *player;
     Camera *camera;
 
 };

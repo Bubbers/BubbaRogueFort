@@ -20,13 +20,33 @@
 
 float3 UP_VECTOR = make_vector(0.0f,1.0f,0.0f);
 
-ExploreScene::ExploreScene() : RogueFortScene() {
+ExploreScene::ExploreScene(Camera* camera) : RogueFortScene() {
 
     scene = LevelFileReader::read("../levels/test.level", this);
     collider = ColliderFactory::getTwoPhaseCollider();
+    this->camera = camera;
 
-    int width = Globals::get(Globals::WINDOW_WIDTH);
-    int height = Globals::get(Globals::WINDOW_HEIGHT);
+    /* Shader setup done once for all meshes that use it */
+    ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
+
+    /* Load player mesh and attach it to the player GameObject */
+    Mesh *playerMesh = ResourceManager::loadAndFetchMesh("../meshes/bubba.obj");
+    // references are from the the build folder
+
+    // character to move
+    player = new GameObject(playerMesh);
+    MoveComponentWithCollision *moveComponent = new MoveComponentWithCollision(player);
+    player->addComponent(moveComponent);
+
+    player->setLocation(make_vector(0.0f, 0.2f,0.0f));
+    StandardRenderer *stdrenderer = new StandardRenderer(playerMesh, player, standardShader);
+    player->addRenderComponent(stdrenderer);
+    player->setDynamic(true);
+    player->setIdentifier(0);
+    player->addCollidesWith(1);
+
+    player->addComponent(camera);
+    scene->addShadowCaster(player);
 
     createLight();
 }
@@ -65,11 +85,6 @@ void ExploreScene::update(float dt, std::vector<GameObject *> *toDelete) {
 
 }
 
-void ExploreScene::sceneEntry(GameObject* player, Camera *camera) {
-    scene->addShadowCaster(player);
+void ExploreScene::sceneEntry(Player* player, Camera *camera) {
     this->camera = camera;
-}
-
-void ExploreScene::sceneExit(GameObject* player, Camera *camera)  {
-
 }

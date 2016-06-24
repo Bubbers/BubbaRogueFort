@@ -34,6 +34,12 @@ ActionMenu::ActionMenu(vector<Bandit*>* banditsInPlay) {
 
 }
 
+void ActionMenu::updateBanditButtons() {
+    buttonList->clearChildren();
+    createBanditButtons();
+    updateLayout();
+}
+
 void ActionMenu::createBanditButtons() {
     for(auto banditIt : *bandits){
         buttonList->addChild(createActionButton(banditIt));

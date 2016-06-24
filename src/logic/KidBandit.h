@@ -9,7 +9,7 @@
 
 class KidBandit : public Bandit{
 public:
-    KidBandit();
+    KidBandit(string name);
 };
 
 

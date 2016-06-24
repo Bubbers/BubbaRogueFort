@@ -3,5 +3,7 @@ set(GAME_SOURCE_FILES
         logic/Bandit.cpp
         logic/Attack.cpp
         logic/KidBandit.cpp
+        logic/Enemy.cpp
+        logic/Player.cpp
         ${GAME_SOURCE_FILES}
         PARENT_SCOPE)

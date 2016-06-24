@@ -18,13 +18,12 @@ class ActionMenu;
 
 class ExploreScene : public RogueFortScene {
 public:
-    ExploreScene();
+    ExploreScene(Camera* camera);
     virtual Camera* getCamera();
     virtual void update(float dt, std::vector<GameObject*> *toDelete);
     virtual void resize(int x, int y);
 
-    virtual void sceneEntry(GameObject* player, Camera *camera);
-    virtual void sceneExit(GameObject* player, Camera *camera) ;
+    virtual void sceneEntry(Player* player, Camera *camera);
 
 private:
     void createLight();

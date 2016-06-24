@@ -8,9 +8,9 @@
 #include "constants.h"
 #include "BattleScene.h"
 
-SceneHandler::SceneHandler(GameObject* player , Camera *camera) {
+SceneHandler::SceneHandler(Player* player, Camera* camera) {
     startScene = new StartScene();
-    explorerScene = new ExploreScene();
+    explorerScene = new ExploreScene(camera);
 
     scene = startScene;
     this->player = player;

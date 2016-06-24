@@ -6,6 +6,7 @@
 #include <ResourceManager.h>
 #include <StandardRenderer.h>
 #include <constants.h>
+#include <iostream>
 #include "BattleScene.h"
 #include "../level/LevelFileReader.h"
 #include "../components/PlayerCamera.h"
@@ -16,6 +17,7 @@
 
 BattleScene::BattleScene() {
     scene = LevelFileReader::read("../levels/battle.level", this);
+    enemies = new vector<Enemy*>();
 
     int width = Globals::get(Globals::WINDOW_WIDTH);
     int height = Globals::get(Globals::WINDOW_HEIGHT);
@@ -31,6 +33,9 @@ BattleScene::BattleScene() {
         GameObject *monster = new GameObject(monsterMesh);
         monster->setLocation(make_vector(-10.0f, 0.0f, i * 4.0f - 6.0f));
         monster->setRotation(make_quaternion_axis_angle(make_vector(0.0f, 1.0f, 0.0f), M_PI / 2));
+        Enemy* enemy = new Enemy();
+        monster->addComponent(enemy);
+        enemies->insert(enemies->end(),enemy);
 
         ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
         StandardRenderer *stdrenderer = new StandardRenderer(monsterMesh, monster, standardShader);
@@ -38,12 +43,6 @@ BattleScene::BattleScene() {
         scene->addShadowCaster(monster);
     }
 
-    GameObject* hudObj = new GameObject();
-    vector<Bandit*>* bandits = new vector<Bandit*>();
-    bandits->insert(bandits->end(),new KidBandit());
-    hud = new ActionMenu(bandits);
-    hudObj->addRenderComponent(hud);
-    scene->addTransparentObject(hudObj);
 
 
 }
@@ -77,8 +76,68 @@ Camera* BattleScene::getCamera() {
 
 void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
     RogueFortScene::update(dt,toDelete);
-    pair<string,Bandit*>* action = hud->pollAction();
-    if(action != nullptr){
-        requestSceneChange(EXPLORE_SCENE);
+    if(playersTurnElseEnemies) {
+        pair<string, Bandit *> *action = hud->pollAction();
+        if (action != nullptr) {
+            playersTurnElseEnemies = false;
+            Enemy* enemy = enemies->back();
+            enemy->takeDamage(action->second->performAttack(action->first));
+            if(!enemy->isAlive()) {
+                cout << "Enemy " << enemy->getName() << " died.\n";
+                enemies->pop_back();
+                if(enemies->size() == 0)
+                    requestSceneChange(EXPLORE_SCENE);
+            }else
+                cout << "Enemy " << enemy->getName() << " has " << enemy->getHealth() << " health left.\n";
+        }
+    }else{
+        Enemy* attacker = enemies->at(getRandomIndex(enemies->size()));
+        int targetI = getRandomIndex(player->getFighters()->size());
+        Bandit* target = player->getFighters()->at(targetI);
+        target->takeDamage(attacker->performAttack(attacker->getArbitraryAttack()));
+        if(target->isAlive()) {
+            cout << "Member " << target->getName() << " has " << target->getHealth() << " health left.\n";
+        } else{
+            cout << "Member " << target->getName() << " has died. His actions will be remembered. Like that time when he made a pie.\n";
+            player->getFighters()->erase(player->getFighters()->begin() + targetI);
+            hud->updateBanditButtons();
+
+        }
+        playersTurnElseEnemies = true;
+    }
+}
+
+int BattleScene::getRandomIndex(int size) {
+
+    int index = round((float)rand()/RAND_MAX*size);
+    if(index == size)
+        index--;
+    return index;
+}
+
+void BattleScene::sceneEntry(Player *player, Camera *camera) {
+    this->player = player;
+    placePlayerFighters();
+    GameObject* hudObj = new GameObject();
+    hud = new ActionMenu(player->getFighters());
+    hudObj->addRenderComponent(hud);
+    scene->addTransparentObject(hudObj);
+
+}
+
+void BattleScene::placePlayerFighters() {
+    int i = 0;
+    for(Bandit* fighter : *(player->getFighters())){
+        Mesh *fighterMesh = ResourceManager::loadAndFetchMesh("../meshes/bubba.obj");
+        GameObject *fighterObj = new GameObject(fighterMesh);
+        fighterObj->setLocation(make_vector(10.0f, 0.0f, i++ * 4.0f - 6.0f));
+        fighterObj->setRotation(make_quaternion_axis_angle(make_vector(0.0f, 1.0f, 0.0f), -M_PI / 2));
+        fighterObj->addComponent(fighter);
+
+        ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
+        StandardRenderer *stdrenderer = new StandardRenderer(fighterMesh, fighterObj, standardShader);
+        fighterObj->addRenderComponent(stdrenderer);
+        scene->addShadowCaster(fighterObj);
+
     }
 }

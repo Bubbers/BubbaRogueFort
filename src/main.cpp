@@ -13,6 +13,7 @@
 #include "level/LevelFileReader.h"
 #include "logic/KidBandit.h"
 #include "scenes/SceneHandler.h"
+#include "logic/Player.h"
 
 
 Renderer *renderer;
@@ -24,7 +25,6 @@ static const float3 UP_VECTOR = make_vector(0.0f, 1.0f, 0.0f);
 
 SceneHandler *sceneHandler;
 PlayerCamera *camera;
-GameObject *player;
 
 void idle(float timeSinceStart,float timeSinceLastCall) {
     sceneHandler->idle(timeSinceStart, timeSinceLastCall);
@@ -39,7 +39,7 @@ void resize(int newWidth, int newHeight) {
     sceneHandler->resize(newWidth, newHeight);
 }
 
-void createPlayer() {
+void createCamera() {
     int width = Globals::get(Globals::WINDOW_WIDTH);
     int height = Globals::get(Globals::WINDOW_HEIGHT);
     camera = new PlayerCamera(
@@ -48,32 +48,12 @@ void createPlayer() {
             make_vector(0.0f,1.0f,0.0f), 45, float(width) / float(height),
             0.1f, 50000.0f);
 
-    /* Shader setup done once for all meshes that use it */
-    ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
-
-    /* Load player mesh and attach it to the player GameObject */
-    Mesh *playerMesh = ResourceManager::loadAndFetchMesh("../meshes/bubba.obj");
-    // references are from the the build folder
-
-    // character to move
-    player = new GameObject(playerMesh);
-    MoveComponentWithCollision *moveComponent = new MoveComponentWithCollision(player);
-    player->addComponent(moveComponent);
-
-    player->setLocation(make_vector(0.0f, 0.2f,0.0f));
-    StandardRenderer *stdrenderer = new StandardRenderer(playerMesh, player, standardShader);
-    player->addRenderComponent(stdrenderer);
-    player->setDynamic(true);
-    player->setIdentifier(0);
-    player->addCollidesWith(1);
-
-    player->addComponent(camera);
 
 }
 
 int main(int argc, char *argv[]) {
 
-    printf("%d\n",(new KidBandit())->performAttack("punch").damage);
+    //srand(); TODO
 
     Logger::addLogHandler(new StdOutLogHandler());
     Logger::setLogLevel(LogLevel::INFO);
@@ -86,9 +66,8 @@ int main(int argc, char *argv[]) {
     renderer = new Renderer();
     renderer->initRenderer(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    createPlayer();
-    sceneHandler = new SceneHandler(player, camera);
-
+    createCamera();
+    sceneHandler = new SceneHandler(new Player(),camera);
 
     win->start(60);
     return 0;

@@ -8,6 +8,7 @@
 
 #include <Camera.h>
 #include <Scene.h>
+#include "../logic/Player.h"
 
 class Scene;
 class Camera;
@@ -19,8 +20,8 @@ public:
     virtual bool changeScene();
     void setShouldChangeScene(bool newValue);
 
-    virtual void sceneEntry(GameObject* player, Camera *camera) {};
-    virtual void sceneExit(GameObject* player , Camera *camera)  {};
+    virtual void sceneEntry(Player* player, Camera *camera) {};
+    virtual void sceneExit(Player* player , Camera *camera)  {};
 
     virtual void resize(int x, int y){}
     virtual void update(float dt, std::vector<GameObject*>* toDelete);

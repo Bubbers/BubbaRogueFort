@@ -25,6 +25,9 @@ public:
      */
     std::pair<string,Bandit*>* pollAction();
 
+
+    void updateBanditButtons();
+
 private:
     void createBanditButtons();
     Layout* createActionButton(Bandit* bandit);
