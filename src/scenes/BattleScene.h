@@ -26,6 +26,7 @@ private:
     void createLight();
     int getRandomIndex(int size);
     void placePlayerFighters();
+    void deleteEnemyFromList(Enemy* enemy);
 
     std::vector<Enemy*>* enemies;
     Player* player;

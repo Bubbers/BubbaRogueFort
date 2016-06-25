@@ -20,6 +20,7 @@ public:
     virtual void update(float dt) override {};
     virtual bool isAlive();
     virtual int getHealth();
+    virtual bool equals(Bandit* other);
 
 protected:
     Bandit(std::string name, Stats* stats, std::unordered_map<std::string,Attack>* attacks);

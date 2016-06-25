@@ -77,14 +77,14 @@ Camera* BattleScene::getCamera() {
 void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
     RogueFortScene::update(dt,toDelete);
     if(playersTurnElseEnemies) {
-        pair<string, Bandit *> *action = hud->pollAction();
+        ActionMenu::Action *action = hud->pollAction();
         if (action != nullptr) {
             playersTurnElseEnemies = false;
-            Enemy* enemy = enemies->back();
-            enemy->takeDamage(action->second->performAttack(action->first));
+            Enemy* enemy = (Enemy*)action->target;
+            enemy->takeDamage(action->performer->performAttack(action->attack));
             if(!enemy->isAlive()) {
                 cout << "Enemy " << enemy->getName() << " died.\n";
-                enemies->pop_back();
+                deleteEnemyFromList(enemy);
                 if(enemies->size() == 0)
                     requestSceneChange(EXPLORE_SCENE);
             }else
@@ -100,10 +100,21 @@ void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
         } else{
             cout << "Member " << target->getName() << " has died. His actions will be remembered. Like that time when he made a pie.\n";
             player->getFighters()->erase(player->getFighters()->begin() + targetI);
-            hud->updateBanditButtons();
+            hud->updateFighterButtons();
 
         }
         playersTurnElseEnemies = true;
+    }
+}
+
+void BattleScene::deleteEnemyFromList(Enemy *enemy) {
+    int i = 0;
+    for(Enemy* enemyIt : *enemies) {
+        if (enemyIt->equals(enemy)) {
+            enemies->erase(enemies->begin() + i);
+            break;
+        }
+        i++;
     }
 }
 
@@ -119,7 +130,7 @@ void BattleScene::sceneEntry(Player *player, Camera *camera) {
     this->player = player;
     placePlayerFighters();
     GameObject* hudObj = new GameObject();
-    hud = new ActionMenu(player->getFighters());
+    hud = new ActionMenu(player->getFighters(),(vector<Bandit*>*)enemies);
     hudObj->addRenderComponent(hud);
     scene->addTransparentObject(hudObj);
 

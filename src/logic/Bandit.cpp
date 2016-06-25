@@ -43,3 +43,10 @@ void Bandit::takeDamage(AttackResult damage) {
 int Bandit::getHealth() {
     return health;
 }
+
+bool Bandit::equals(Bandit *other) {
+    if(other == nullptr)
+        return false;
+
+    return other->getName() == getName() && other->getHealth() == getHealth();
+}
