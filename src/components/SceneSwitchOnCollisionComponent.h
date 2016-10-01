@@ -15,7 +15,7 @@ class SceneSwitchOnCollisionComponent : public IComponent{
 public:
     SceneSwitchOnCollisionComponent(RogueFortScene *scene, std::string newSceneName);
 
-    void update(float dt);
+    void update(float dt) override;
     virtual void beforeCollision(GameObject* collider) override ;
 private:
     RogueFortScene *scene;
