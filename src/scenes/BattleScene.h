@@ -28,7 +28,7 @@ private:
     void placePlayerFighters();
     void deleteEnemyFromList(Enemy* enemy);
 
-    std::vector<Enemy*>* enemies;
+    std::vector<std::pair<Enemy*,GameObject*>>* enemies;
     Player* player;
 
     ActionMenu *hud;

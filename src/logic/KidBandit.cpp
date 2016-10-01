@@ -6,9 +6,8 @@
 
 using namespace std;
 
-KidBandit::KidBandit(string name) : Bandit(name){
+KidBandit::KidBandit(string name) : Bandit(name,15){
     stats = new Stats(1);
-    health = 15;
     attacks = new unordered_map<string,Attack>();
     attacks->insert(pair<string,Attack>("punch",punch()));
 }

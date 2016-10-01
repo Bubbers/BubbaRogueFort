@@ -21,16 +21,20 @@ public:
     virtual bool isAlive();
     virtual int getHealth();
     virtual bool equals(Bandit* other);
+    virtual void addDamageListener(std::function<void (int)> listener);
+    virtual int getMaxHealth();
 
 protected:
-    Bandit(std::string name, Stats* stats, std::unordered_map<std::string,Attack>* attacks);
-    Bandit(std::string name);
+    Bandit(std::string name, int maxHealth, Stats* stats, std::unordered_map<std::string,Attack>* attacks);
+    Bandit(std::string name, int maxHealth);
 
     Stats* stats;
     std::unordered_map<std::string,Attack>* attacks;
 
     int health;
+    int maxHealth;
     std::string name;
+    std::vector<std::function<void (int)>> damageListeners;
 
 };
 
