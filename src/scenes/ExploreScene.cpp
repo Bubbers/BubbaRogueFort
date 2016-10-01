@@ -1,7 +1,3 @@
-//
-// Created by simon on 2016-06-21.
-//
-
 #include <PerspectiveCamera.h>
 #include <ResourceManager.h>
 #include <constants.h>
@@ -18,7 +14,9 @@
 #include "../logic/KidBandit.h"
 
 
-float3 UP_VECTOR = make_vector(0.0f,1.0f,0.0f);
+using namespace chag;
+float3 UP_VECTOR = chag::make_vector(0.0f,1.0f,0.0f);
+
 
 ExploreScene::ExploreScene(Camera* camera) : RogueFortScene() {
 

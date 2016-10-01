@@ -1,6 +1,3 @@
-//
-// Created by johan on 2016-06-22.
-//
 
 #include <Globals.h>
 #include <ResourceManager.h>
@@ -17,6 +14,7 @@
 #include "constants.h"
 #include "../ui/HealthBar.h"
 
+using namespace chag;
 
 BattleScene::BattleScene() {
     scene = LevelFileReader::read("../levels/battle.level", this);

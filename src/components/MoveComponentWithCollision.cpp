@@ -4,6 +4,8 @@
 #include "MoveComponentWithCollision.h"
 #include "../controls.h"
 
+using namespace chag;
+
 static const float3 UP_VECTOR = make_vector(0.0f, 1.0f, 0.0f);
 
 MoveComponentWithCollision::MoveComponentWithCollision(
