@@ -30,12 +30,15 @@ std::string Bandit::getName() {
     return name;
 }
 
-Bandit::Bandit(string name) : Bandit(name,nullptr,nullptr){ }
+Bandit::Bandit(string name, int maxHealth) : Bandit(name,maxHealth,nullptr,nullptr){ }
 
-Bandit::Bandit(string name,Stats *stats, std::unordered_map<std::string, Attack> *attacks) : name(name),stats(stats),attacks(attacks){ }
+Bandit::Bandit(string name, int maxHealth ,Stats *stats, std::unordered_map<std::string, Attack> *attacks)
+        : name(name),maxHealth(maxHealth),health(maxHealth),stats(stats),attacks(attacks){ }
 
 void Bandit::takeDamage(AttackResult damage) {
     health -= damage.damage;
+    for(function<void (int)> listener : damageListeners)
+        listener(health);
     if(health <= 0)
         owner->makeDirty();
 }
@@ -49,4 +52,12 @@ bool Bandit::equals(Bandit *other) {
         return false;
 
     return other->getName() == getName() && other->getHealth() == getHealth();
+}
+
+void Bandit::addDamageListener(std::function<void(int)> listener) {
+    damageListeners.push_back(listener);
+}
+
+int Bandit::getMaxHealth() {
+    return maxHealth;
 }

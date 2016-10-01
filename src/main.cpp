@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
     //srand(); TODO
 
     Logger::addLogHandler(new StdOutLogHandler());
-    Logger::setLogLevel(LogLevel::INFO);
+    Logger::setLogLevel(LogLevel::WARNING);
     Window* win = new Window(SCREEN_WIDTH, SCREEN_HEIGHT, "Bubba Rogue Fort");
 
     win->setResizeMethod(resize);

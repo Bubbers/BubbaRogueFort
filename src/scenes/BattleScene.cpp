@@ -7,17 +7,20 @@
 #include <StandardRenderer.h>
 #include <constants.h>
 #include <iostream>
+#include <PositioningLayout.h>
+#include <HUDGraphic.h>
 #include "BattleScene.h"
 #include "../level/LevelFileReader.h"
 #include "../components/PlayerCamera.h"
 #include "../ui/ActionMenu.h"
 #include "../logic/KidBandit.h"
 #include "constants.h"
+#include "../ui/HealthBar.h"
 
 
 BattleScene::BattleScene() {
     scene = LevelFileReader::read("../levels/battle.level", this);
-    enemies = new vector<Enemy*>();
+    enemies = new vector<pair<Enemy*,GameObject*>>();
 
     int width = Globals::get(Globals::WINDOW_WIDTH);
     int height = Globals::get(Globals::WINDOW_HEIGHT);
@@ -35,7 +38,7 @@ BattleScene::BattleScene() {
         monster->setRotation(make_quaternion_axis_angle(make_vector(0.0f, 1.0f, 0.0f), M_PI / 2));
         Enemy* enemy = new Enemy();
         monster->addComponent(enemy);
-        enemies->insert(enemies->end(),enemy);
+        enemies->insert(enemies->end(),pair<Enemy*,GameObject*>(enemy,monster));
 
         ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
         StandardRenderer *stdrenderer = new StandardRenderer(monsterMesh, monster, standardShader);
@@ -83,25 +86,21 @@ void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
             Enemy* enemy = (Enemy*)action->target;
             enemy->takeDamage(action->performer->performAttack(action->attack));
             if(!enemy->isAlive()) {
-                cout << "Enemy " << enemy->getName() << " died.\n";
                 deleteEnemyFromList(enemy);
                 if(enemies->size() == 0)
                     requestSceneChange(EXPLORE_SCENE);
-            }else
-                cout << "Enemy " << enemy->getName() << " has " << enemy->getHealth() << " health left.\n";
+                else
+                    hud->updateLayout();
+            }
         }
     }else{
-        Enemy* attacker = enemies->at(getRandomIndex(enemies->size()));
+        Enemy* attacker = enemies->at(getRandomIndex(enemies->size())).first;
         int targetI = getRandomIndex(player->getFighters()->size());
         Bandit* target = player->getFighters()->at(targetI);
         target->takeDamage(attacker->performAttack(attacker->getArbitraryAttack()));
-        if(target->isAlive()) {
-            cout << "Member " << target->getName() << " has " << target->getHealth() << " health left.\n";
-        } else{
-            cout << "Member " << target->getName() << " has died. His actions will be remembered. Like that time when he made a pie.\n";
+        if(!target->isAlive()) {
             player->getFighters()->erase(player->getFighters()->begin() + targetI);
             hud->updateFighterButtons();
-
         }
         playersTurnElseEnemies = true;
     }
@@ -109,8 +108,8 @@ void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
 
 void BattleScene::deleteEnemyFromList(Enemy *enemy) {
     int i = 0;
-    for(Enemy* enemyIt : *enemies) {
-        if (enemyIt->equals(enemy)) {
+    for(auto enemyIt : *enemies) {
+        if (enemyIt.first->equals(enemy)) {
             enemies->erase(enemies->begin() + i);
             break;
         }
@@ -128,9 +127,15 @@ int BattleScene::getRandomIndex(int size) {
 
 void BattleScene::sceneEntry(Player *player, Camera *camera) {
     this->player = player;
-    placePlayerFighters();
     GameObject* hudObj = new GameObject();
-    hud = new ActionMenu(player->getFighters(),(vector<Bandit*>*)enemies);
+    vector<Bandit*>* enemyBandits = new vector<Bandit*>();
+    for(auto enemyBandit : *enemies)
+        enemyBandits->push_back(enemyBandit.first);
+    hud = new ActionMenu(player->getFighters(),enemyBandits);
+    hud->setWorldCamera(this->camera);
+    placePlayerFighters();
+    for(auto enemy : *enemies)
+        hud->addRelativeLayout(enemy.second,new HealthBar(enemy.first));
     hudObj->addRenderComponent(hud);
     scene->addTransparentObject(hudObj);
 
@@ -144,6 +149,7 @@ void BattleScene::placePlayerFighters() {
         fighterObj->setLocation(make_vector(10.0f, 0.0f, i++ * 4.0f - 6.0f));
         fighterObj->setRotation(make_quaternion_axis_angle(make_vector(0.0f, 1.0f, 0.0f), -M_PI / 2));
         fighterObj->addComponent(fighter);
+        hud->addRelativeLayout(fighterObj,new HealthBar(fighter));
 
         ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
         StandardRenderer *stdrenderer = new StandardRenderer(fighterMesh, fighterObj, standardShader);

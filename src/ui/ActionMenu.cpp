@@ -22,7 +22,7 @@ ActionMenu::ActionMenu(vector<Bandit*>* fightersInPlay, vector<Bandit*>* bandits
 
     HUDGraphic::Color borderColor = HUDGraphic::Color(string("#162955"));
     HUDGraphic::Color bgColor = HUDGraphic::Color(string("#2E4172"));
-    HudGraphic *hudG = new HUDGraphic(bgColor);
+    HUDGraphic* hudG = new HUDGraphic(bgColor);
     botBar->setBackground(hudG->setBorder(3, 0, 0, 0, borderColor));
 
     buttonList = new ListLayout(ListLayout::HORIZONTAL, Dimension::fromPercentage(90),Dimension::fromPercentage(50));
@@ -71,6 +71,8 @@ void ActionMenu::update(float dt) {
 
 void ActionMenu::createTargetButtons(string action, Bandit *performer) {
     for(Bandit* bandit : *bandits){
+        if(!bandit->isAlive())
+            continue;
         Layout* butt = createClickButton(bandit->getName());
         butt->addClickListener([this, action, performer, bandit]
             (int x, int y, Layout* clickedOn, bool enteringElseLeaving) -> void
@@ -83,11 +85,6 @@ void ActionMenu::createTargetButtons(string action, Bandit *performer) {
 
         buttonList->addChild(butt);
     }
-    /*Layout* butt = createClickButton("Back");
-    butt->addClickListener([=,performer](int x, int y, Layout* clickedOn, bool enteringElseLeaving) -> void{
-        if(!enteringElseLeaving)
-
-    });*/
 }
 
 void ActionMenu::createAttacksButtons(Bandit *fighter) {
