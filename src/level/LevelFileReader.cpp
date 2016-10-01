@@ -5,6 +5,8 @@
 #include "../components/SceneSwitchOnCollisionComponent.h"
 #include <StandardRenderer.h>
 
+using namespace chag;
+
 LevelFileReader::LevelFileReader() {
 }
 

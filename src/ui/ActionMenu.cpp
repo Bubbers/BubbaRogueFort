@@ -22,7 +22,7 @@ ActionMenu::ActionMenu(vector<Bandit*>* fightersInPlay, vector<Bandit*>* bandits
 
     HUDGraphic::Color borderColor = HUDGraphic::Color(string("#162955"));
     HUDGraphic::Color bgColor = HUDGraphic::Color(string("#2E4172"));
-    HUDGraphic* hudG = new HUDGraphic(bgColor);
+    HUDGraphic *hudG = new HUDGraphic(bgColor);
     botBar->setBackground(hudG->setBorder(3, 0, 0, 0, borderColor));
 
     buttonList = new ListLayout(ListLayout::HORIZONTAL, Dimension::fromPercentage(90),Dimension::fromPercentage(50));

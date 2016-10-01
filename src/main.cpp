@@ -15,6 +15,7 @@
 #include "scenes/SceneHandler.h"
 #include "logic/Player.h"
 
+using namespace chag;
 
 Renderer *renderer;
 const int SCREEN_WIDTH = 640;

@@ -1,5 +1,7 @@
 #include "PlayerCamera.h"
 
+using namespace chag;
+
 PlayerCamera::PlayerCamera(float3 offset, float3 lookAt, float3 up, float fov, float ratio, float nearPlane, float farPlane)
     : Camera(offset, lookAt, up, fov, ratio, nearPlane, farPlane) {
     this->offset = offset;

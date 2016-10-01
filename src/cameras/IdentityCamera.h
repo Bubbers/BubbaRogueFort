@@ -1,9 +1,4 @@
-//
-// Created by simon on 2016-06-21.
-//
-
-#ifndef BUBBAROGUEFORT_IDENTITYCAMERA_H
-#define BUBBAROGUEFORT_IDENTITYCAMERA_H
+#pragma once
 
 #include <Camera.h>
 
@@ -15,10 +10,7 @@ public:
 
     virtual void update(float dt);
 
-    virtual float4x4 getViewMatrix();
+    virtual chag::float4x4 getViewMatrix();
 
-    virtual float4x4 getProjectionMatrix();
+    virtual chag::float4x4 getProjectionMatrix();
 };
-
-
-#endif //BUBBAROGUEFORT_IDENTITYCAMERA_H
