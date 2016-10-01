@@ -1,10 +1,4 @@
-//
-// Created by johan on 2016-06-21.
-//
-
-#ifndef BUBBAROGUEFORT_MOVECOMPONENTWITHCOLLISION_H
-#define BUBBAROGUEFORT_MOVECOMPONENTWITHCOLLISION_H
-
+#pragma once
 
 #include <MoveComponent.h>
 
@@ -25,7 +19,6 @@ private:
 
     void initKeyBindings();
     void checkKeyboardKeys();
+
+    const float SQRT_2 = sqrtf(2);
 };
-
-
-#endif //BUBBAROGUEFORT_MOVECOMPONENTWITHCOLLISION_H
