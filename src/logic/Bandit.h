@@ -20,6 +20,7 @@ public:
     virtual bool equals(Bandit* other);
     virtual void addDamageListener(std::function<void (int)> listener);
     virtual int getMaxHealth();
+    virtual void setHealth(int health);
 
     /**
      * Hash function for Bandit

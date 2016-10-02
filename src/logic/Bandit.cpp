@@ -62,3 +62,7 @@ void Bandit::addDamageListener(std::function<void(int)> listener) {
 int Bandit::getMaxHealth() {
     return maxHealth;
 }
+
+void Bandit::setHealth(int health) {
+    this->health = health;
+}

@@ -8,6 +8,8 @@
 #include <vector>
 #include "CrewMember.h"
 
+class InventoryItem;
+
 class Player {
 public:
     Player();
@@ -15,6 +17,7 @@ public:
 
 private:
     std::vector<CrewMember*>* fighters;
+    std::map<std::string,InventoryItem*> inventory;
 
 };
 
