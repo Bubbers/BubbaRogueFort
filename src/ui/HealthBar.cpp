@@ -11,6 +11,9 @@
 #include "../logic/Bandit.h"
 #include "GLSquare.h"
 
+using namespace std;
+using namespace chag;
+
 HealthBar::HealthBar(Bandit* bandit) : bandit(bandit), PositioningLayout(Dimension::fromPercentage(50),Dimension::fromPercentage(50)){
 
     ListLayout* root = new ListLayout(ListLayout::VERTICAL,Dimension::fromPixels(100),Dimension::fromPixels(35));
@@ -47,9 +50,9 @@ void HealthBar::damageTaken() {
 }
 
 void HealthBar::getGLSquares(float layoutXPos, float layoutYPos, float layoutWidth, float layoutHeight,
-                             map<string, IHudDrawable *> *list) {
+                             map<string, IHudDrawable *> *map) {
     if(!dead) {
-        PositioningLayout::getGLSquares(layoutXPos, layoutYPos, layoutWidth, layoutHeight, list);
+        PositioningLayout::getGLSquares(layoutXPos, layoutYPos, layoutWidth, layoutHeight, map);
         damageTaken();
     }
 }

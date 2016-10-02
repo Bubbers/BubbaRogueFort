@@ -15,6 +15,7 @@
 
 
 using namespace std::placeholders;
+using namespace std;
 
 StartScene::StartScene() {
 

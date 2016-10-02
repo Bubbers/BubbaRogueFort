@@ -10,6 +10,8 @@
 #include <IComponent.h>
 #include "Attack.h"
 
+struct Stats;
+
 class Bandit : public IComponent {
 
 public:

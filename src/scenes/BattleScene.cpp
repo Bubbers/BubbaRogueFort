@@ -7,14 +7,15 @@
 #include <PositioningLayout.h>
 #include <HUDGraphic.h>
 #include "BattleScene.h"
-#include "../level/LevelFileReader.h"
-#include "../components/PlayerCamera.h"
-#include "../ui/ActionMenu.h"
-#include "../logic/KidBandit.h"
+#include "level/LevelFileReader.h"
+#include "components/PlayerCamera.h"
+#include "ui/ActionMenu.h"
+#include "logic/KidBandit.h"
 #include "constants.h"
-#include "../ui/HealthBar.h"
+#include "ui/HealthBar.h"
 
 using namespace chag;
+using namespace std;
 
 BattleScene::BattleScene() {
     scene = LevelFileReader::read("../levels/battle.level", this);
@@ -43,9 +44,6 @@ BattleScene::BattleScene() {
         monster->addRenderComponent(stdrenderer);
         scene->addShadowCaster(monster);
     }
-
-
-
 }
 
 void BattleScene::createLight() {

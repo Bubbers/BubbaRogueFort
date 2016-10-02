@@ -3,6 +3,7 @@
 //
 
 #include "Enemy.h"
+#include "Stats.h"
 
 using namespace std;
 

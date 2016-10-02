@@ -6,6 +6,7 @@
 #include <StandardRenderer.h>
 
 using namespace chag;
+using namespace std;
 
 LevelFileReader::LevelFileReader() {
 }
