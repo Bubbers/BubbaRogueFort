@@ -26,7 +26,7 @@ AttackResult Bandit::performAttack(string attack) {
     return (it->second)(*stats);
 }
 
-std::string Bandit::getName() {
+std::string Bandit::getName() const {
     return name;
 }
 
@@ -43,7 +43,7 @@ void Bandit::takeDamage(AttackResult damage) {
         owner->makeDirty();
 }
 
-int Bandit::getHealth() {
+int Bandit::getHealth() const {
     return health;
 }
 
