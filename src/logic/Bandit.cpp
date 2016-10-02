@@ -52,7 +52,7 @@ bool Bandit::equals(Bandit *other) {
     if(other == nullptr)
         return false;
 
-    return other->getName() == getName() && other->getHealth() == getHealth();
+    return other->getName() == getName();
 }
 
 void Bandit::addDamageListener(std::function<void(int)> listener) {

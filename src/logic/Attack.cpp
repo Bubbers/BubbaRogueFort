@@ -5,6 +5,7 @@
 #include "particleEffects/CircleEffect.h"
 #include "Texture.h"
 #include "ResourceManager.h"
+#include "components/TimedLife.h"
 
 Attack punch() {
     return [](Stats stats) -> AttackResult {
@@ -27,6 +28,7 @@ void AttackResult::visualEffect(chag::float3 fromPos, chag::float3 toPos, Camera
     ParticleGenerator *pgen = new ParticleGenerator(texture, particles, camera,
                                                     gob->getModelMatrix(), circleEffect);
 
+    gob->addComponent(new TimedLife(5));
     gob->addRenderComponent(pgen);
     putGameObject(gob);
 }

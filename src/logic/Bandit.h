@@ -1,9 +1,4 @@
-//
-// Created by simon on 2016-06-22.
-//
-
-#ifndef BUBBAROGUEFORT_BANDIT_H
-#define BUBBAROGUEFORT_BANDIT_H
+#pragma once
 
 #include <unordered_map>
 #include <unordered_set>
@@ -34,8 +29,7 @@ public:
         std::size_t operator()(Bandit* const& bandit) const
         {
             std::size_t h1 = std::hash<std::string>()(bandit->getName());
-            std::size_t h2 = std::hash<int>()(bandit->getHealth());
-            return h1 ^ (h2 << 1); // or use boost::hash_combine
+            return h1; // or use boost::hash_combine
         }
     };
 
@@ -53,5 +47,3 @@ protected:
 
 };
 
-
-#endif //BUBBAROGUEFORT_BANDIT_H
