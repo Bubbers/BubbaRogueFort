@@ -16,7 +16,7 @@ HealthBar::HealthBar(Bandit* bandit) : bandit(bandit), PositioningLayout(Dimensi
     ListLayout* root = new ListLayout(ListLayout::VERTICAL,Dimension::fromPixels(100),Dimension::fromPixels(35));
 
     Font* font = FontManager::getInstance()->loadAndFetchFont("../fonts/Ubuntu-M.ttf",20);
-    TextLayout* name = new TextLayout(bandit->getName(),font,Dimension::fill(),Dimension::fromPixels(25));
+    TextLayout* name = new TextLayout(bandit->getName(),font,Dimension::fromPixels(100),Dimension::fromPixels(25));
 
     PositioningLayout* border = new PositioningLayout(Dimension::fill(),Dimension::fromPixels(10));
     border->setBackground((new HUDGraphic(HUDGraphic::Color(string("#000"),0)))->setBorder(1, HUDGraphic::Color(string("#000"))));

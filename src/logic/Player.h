@@ -6,15 +6,15 @@
 #define BUBBAROGUEFORT_PLAYER_H
 
 #include <vector>
-#include "Bandit.h"
+#include "CrewMember.h"
 
 class Player {
 public:
     Player();
-    std::vector<Bandit*>* getFighters();
+    std::vector<CrewMember*>* getFighters();
 
 private:
-    std::vector<Bandit*>* fighters;
+    std::vector<CrewMember*>* fighters;
 
 };
 

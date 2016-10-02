@@ -5,9 +5,9 @@
 #ifndef BUBBAROGUEFORT_KIDBANDIT_H
 #define BUBBAROGUEFORT_KIDBANDIT_H
 
-#include "Bandit.h"
+#include "CrewMember.h"
 
-class KidBandit : public Bandit{
+class KidBandit : public CrewMember{
 public:
     KidBandit(string name);
 };
