@@ -122,9 +122,13 @@ void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
 Enemy* BattleScene::getRandomEnemy() {
     int i = getRandomIndex(enemies->size());
     int j = 0;
-    for(auto enemy : *enemies)
-        if(i == j++)
+    for(auto enemy : *enemies) {
+        if(i == j++) {
             return enemy.first;
+        }
+    }
+
+    return nullptr;
 }
 
 int BattleScene::getRandomIndex(int size) {
