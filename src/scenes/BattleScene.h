@@ -27,8 +27,10 @@ private:
     int getRandomIndex(int size);
     void placePlayerFighters();
     void deleteEnemyFromList(Enemy* enemy);
+    Enemy* getRandomEnemy();
 
-    std::vector<std::pair<Enemy*,GameObject*>>* enemies;
+    typedef std::unordered_map<Enemy*,GameObject*,Bandit::BanditHash> enemyMap;
+    enemyMap* enemies;
     Player* player;
 
     ActionMenu *hud;

@@ -41,7 +41,7 @@ void HealthBar::damageTaken() {
     if(bar->getRenderedBackground() != nullptr) {
         bar->getRenderedBackground()->setScale(chag::make_vector((float)bandit->getHealth()/(float)bandit->getMaxHealth(),1.0f));
     }
-    if(bandit->getHealth() == 0)
+    if(!bandit->isAlive())
         dead = true;
 
 }
