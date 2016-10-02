@@ -129,7 +129,7 @@ void BattleScene::sceneEntry(Player *player, Camera *camera) {
     vector<Bandit*>* enemyBandits = new vector<Bandit*>();
     for(auto enemyBandit : *enemies)
         enemyBandits->push_back(enemyBandit.first);
-    hud = new ActionMenu(player->getFighters(),enemyBandits);
+    hud = new ActionMenu((std::vector<Bandit*>*)player->getFighters(),enemyBandits);
     hud->setWorldCamera(this->camera);
     placePlayerFighters();
     for(auto enemy : *enemies)
@@ -141,11 +141,11 @@ void BattleScene::sceneEntry(Player *player, Camera *camera) {
 
 void BattleScene::placePlayerFighters() {
     int i = 0;
-    for(Bandit* fighter : *(player->getFighters())){
-        Mesh *fighterMesh = ResourceManager::loadAndFetchMesh("../meshes/bubba.obj");
+    for(CrewMember* fighter : *(player->getFighters())){
+        Mesh *fighterMesh = ResourceManager::loadAndFetchMesh(fighter->getCrewType() == CrewMember::DOG ? "../meshes/dog.obj" : "../meshes/bubba.obj");
         GameObject *fighterObj = new GameObject(fighterMesh);
         fighterObj->setLocation(make_vector(10.0f, 0.0f, i++ * 4.0f - 6.0f));
-        fighterObj->setRotation(make_quaternion_axis_angle(make_vector(0.0f, 1.0f, 0.0f), -M_PI / 2));
+        fighterObj->setRotation(make_quaternion_axis_angle(make_vector(0.0f, 1.0f, 0.0f), fighter->getCrewType() == CrewMember::DOG ? M_PI : -M_PI_2));
         fighterObj->addComponent(fighter);
         hud->addRelativeLayout(fighterObj,new HealthBar(fighter));
 
