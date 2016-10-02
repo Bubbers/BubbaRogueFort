@@ -13,6 +13,7 @@
 #include "logic/KidBandit.h"
 #include "constants.h"
 #include "ui/HealthBar.h"
+#include "components/AnimationStateHandler.h"
 
 #include "ParticleGenerator.h"
 #include "particleEffects/CircleEffect.h"
@@ -23,6 +24,9 @@ using namespace chag;
 using namespace std;
 
 BattleScene::BattleScene() {
+
+    doAfterAnimation = [] () {};
+
     scene = LevelFileReader::read("../levels/battle.level", this);
     enemies = new enemyMap();
 
@@ -81,6 +85,17 @@ Camera* BattleScene::getCamera() {
 void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
     RogueFortScene::update(dt,toDelete);
 
+    switch (animationState->state) {
+    case AnimationState::State::RUNNING:
+        return;
+    case AnimationState::State::UNRESOLVED:
+        doAfterAnimation();
+        animationState->state = AnimationState::State::NO_ANIM;
+        break;
+    default:
+        break;
+    }
+
     if(playersTurnElseEnemies) {
         ActionMenu::Action *action = hud->pollAction();
 
@@ -89,24 +104,29 @@ void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
             Enemy* enemy = (Enemy*)action->target;
 
             AttackResult attackResult = action->performer->performAttack(action->attack);
-            chag::float3 pos = make_vector(0.0f, 0.0f, 0.0f);
+
+            chag::float3 pos = enemies->find(enemy)->second->getAbsoluteLocation();
 
             attackResult.visualEffect(pos, pos, getCamera(), [this] (GameObject* gob) {
+                gob->addComponent(new AnimationStateHandler(animationState));
                 scene->addTransparentObject(gob);
             });
 
-            enemy->takeDamage(attackResult);
+            doAfterAnimation = [this, enemy, attackResult] () {
+                enemy->takeDamage(attackResult);
 
-            if (!enemy->isAlive()) {
-                enemies->erase(enemy);
-                if (enemies->size() == 0) {
-                    requestSceneChange(EXPLORE_SCENE);
-                } else {
-                    hud->updateLayout();
+                if (!enemy->isAlive()) {
+                    enemies->erase(enemy);
+                    printf("%lu\n", enemies->size());
+                    if (enemies->size() == 0) {
+                        requestSceneChange(EXPLORE_SCENE);
+                    } else {
+                        hud->updateLayout();
+                    }
                 }
-            }
+            };
         }
-    } else {
+    } else if (enemies->size() > 0) {
         Enemy* attacker = getRandomEnemy();
         int targetI = getRandomIndex(player->getFighters()->size());
         Bandit* target = player->getFighters()->at(targetI);

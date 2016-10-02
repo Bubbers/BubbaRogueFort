@@ -1,15 +1,11 @@
-//
-// Created by johan on 2016-06-22.
-//
-
-#ifndef BUBBAROGUEFORT_BATTLESCENE_H
-#define BUBBAROGUEFORT_BATTLESCENE_H
-
+#pragma once
 
 #include "RogueFortScene.h"
-#include "../ui/ActionMenu.h"
-#include "../logic/Enemy.h"
-#include "../logic/KidBandit.h"
+#include "ui/ActionMenu.h"
+#include "logic/Enemy.h"
+#include "logic/KidBandit.h"
+#include "scenes/AnimationState.h"
+#include <memory>
 
 class BattleScene : public RogueFortScene {
 public:
@@ -37,7 +33,9 @@ private:
     Camera* camera;
 
     bool playersTurnElseEnemies = true;
+
+    std::shared_ptr<AnimationState> animationState = std::make_shared<AnimationState>();
+
+    std::function<void()> doAfterAnimation;
 };
 
-
-#endif //BUBBAROGUEFORT_BATTLESCENE_H
