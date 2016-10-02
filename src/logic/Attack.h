@@ -1,27 +1,22 @@
-//
-// Created by simon on 2016-06-22.
-//
-
-#ifndef BUBBAROGUEFORT_ATTACK_H
-#define BUBBAROGUEFORT_ATTACK_H
+#pragma once
 
 #include <functional>
-#include "Stats.h"
+#include "linmath/float3.h"
 
-using namespace std;
+struct Stats;
+class Camera;
+class GameObject;
 
-struct AttackResult {
-    int damage;
+class AttackResult {
+public:
     AttackResult(int damage);
+    int damage;
 };
 
-typedef function<AttackResult (Stats stats)> Attack;
+typedef std::function<AttackResult (Stats stats)> Attack;
 
 //Sample attacks
 /**
  * Does the strength as damage
  */
 Attack punch();
-
-
-#endif //BUBBAROGUEFORT_ATTACK_H

@@ -17,7 +17,7 @@ private:
                           std::unordered_map<std::string, Mesh*> &meshMap,
                           Scene* scene, RogueFortScene *rogueFortScene);
 
-    static std::vector<string> words(const string& str);
+    static std::vector<std::string> words(const std::string& str);
 };
 
 #endif // LEVELFILEREADER_H

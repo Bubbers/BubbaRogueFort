@@ -9,7 +9,7 @@
 
 class KidBandit : public CrewMember{
 public:
-    KidBandit(string name);
+    KidBandit(std::string name);
 };
 
 

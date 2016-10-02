@@ -9,13 +9,13 @@
 
 class Bandit;
 
-class HealthBar : public PositioningLayout{
+class HealthBar : public PositioningLayout {
 public:
     HealthBar(Bandit* bandit);
     void damageTaken();
 
     virtual void getGLSquares(float layoutXPos, float layoutYPos, float layoutWidth, float layoutHeight,
-                              std::map<std::string, IHudDrawable *> *list) override;
+                              std::map<std::string, IHudDrawable *> *map) override;
 
 protected:
     Bandit* bandit;

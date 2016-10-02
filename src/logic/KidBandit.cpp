@@ -3,6 +3,7 @@
 //
 
 #include "KidBandit.h"
+#include "Stats.h"
 
 using namespace std;
 

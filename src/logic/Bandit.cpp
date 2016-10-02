@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "Bandit.h"
+#include "Stats.h"
 
 using namespace std;
 

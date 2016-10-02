@@ -52,7 +52,7 @@ void MoveComponentWithCollision::checkKeyboardKeys() {
         if(cs_H.isActive() && cs_V.isActive())
             vec = vec/SQRT_2;
         this->setVelocity(vec);
-        float angle = y == 0.0f ? M_PI_2 : atan(abs(x/y));
+        float angle = y == 0.0f ? M_PI_2 : atan(std::abs(x/y));
         if(y > 0.0f)
             angle = M_PI - angle;
         if(x < 0.0f)

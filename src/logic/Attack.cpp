@@ -3,6 +3,7 @@
 //
 
 #include "Attack.h"
+#include "Stats.h"
 
 Attack punch(){
     return [](Stats stats) -> AttackResult {

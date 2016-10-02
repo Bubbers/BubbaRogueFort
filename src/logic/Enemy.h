@@ -11,7 +11,7 @@ class Enemy : public Bandit {
 
 public:
     Enemy();
-    string getArbitraryAttack();
+    std::string getArbitraryAttack();
 
 };
 

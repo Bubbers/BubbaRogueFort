@@ -19,12 +19,12 @@ public:
     struct Action{
         Bandit* performer;
         Bandit* target;
-        string attack;
+        std::string attack;
 
-        Action(Bandit *performer, Bandit *target, string attack);
+        Action(Bandit *performer, Bandit *target, std::string attack);
     };
 
-    ActionMenu(std::vector<Bandit*>* fightersInPlay,std::vector<Bandit*>* banditsInPlay);
+    ActionMenu(std::vector<Bandit*>* fightersInPlay, std::vector<Bandit*>* banditsInPlay);
     virtual void update(float dt) override;
 
     /**
@@ -42,8 +42,8 @@ private:
     Layout* createActionButton(Bandit* fighter);
     void createAttacksButtons(Bandit* fighter);
     Layout* createAttackButton(Bandit* fighter, std::string attack);
-    Layout* createClickButton(string name);
-    void createTargetButtons(string action, Bandit* performer);
+    Layout* createClickButton(std::string name);
+    void createTargetButtons(std::string action, Bandit* performer);
 
     Font* font;
     ListLayout* buttonList;
@@ -52,13 +52,13 @@ private:
 
     Bandit* openAttackMenu = nullptr;
     bool backToFighters = false;
-    std::pair<string,Bandit*>* attackPicked = nullptr;
+    std::pair<std::string, Bandit*>* attackPicked = nullptr;
     Action* performedAction = nullptr;
 
     static void onActionHover(int x, int y, Layout* hoveredOn, bool enteredElseLeaving);
     static void onActionClick(int x, int y, Layout* clickedOn, bool enteredElseLeaving);
     Layout::EventFunction openAttacksOnClick(Bandit* fighter);
-    Layout::EventFunction clickedOnAttack(Bandit* fighter, string attack);
+    Layout::EventFunction clickedOnAttack(Bandit* fighter, std::string attack);
 };
 
 
