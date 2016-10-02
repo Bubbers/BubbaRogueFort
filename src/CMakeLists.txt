@@ -8,6 +8,7 @@ add_subdirectory(components)
 add_subdirectory(level)
 add_subdirectory(ui)
 add_subdirectory(scenes)
+add_subdirectory(particleEffects)
 add_subdirectory(logic)
 
 # Define the executable

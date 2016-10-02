@@ -14,6 +14,11 @@
 #include "constants.h"
 #include "ui/HealthBar.h"
 
+#include "ParticleGenerator.h"
+#include "particleEffects/CircleEffect.h"
+#include "Texture.h"
+#include "ResourceManager.h"
+
 using namespace chag;
 using namespace std;
 
@@ -75,21 +80,33 @@ Camera* BattleScene::getCamera() {
 
 void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
     RogueFortScene::update(dt,toDelete);
+
     if(playersTurnElseEnemies) {
         ActionMenu::Action *action = hud->pollAction();
+
         if (action != nullptr) {
             playersTurnElseEnemies = false;
             Enemy* enemy = (Enemy*)action->target;
-            enemy->takeDamage(action->performer->performAttack(action->attack));
-            if(!enemy->isAlive()) {
+
+            AttackResult attackResult = action->performer->performAttack(action->attack);
+            chag::float3 pos = make_vector(0.0f, 0.0f, 0.0f);
+
+            attackResult.visualEffect(pos, pos, getCamera(), [this] (GameObject* gob) {
+                scene->addTransparentObject(gob);
+            });
+
+            enemy->takeDamage(attackResult);
+
+            if (!enemy->isAlive()) {
                 enemies->erase(enemy);
-                if(enemies->size() == 0)
+                if (enemies->size() == 0) {
                     requestSceneChange(EXPLORE_SCENE);
-                else
+                } else {
                     hud->updateLayout();
+                }
             }
         }
-    }else{
+    } else {
         Enemy* attacker = getRandomEnemy();
         int targetI = getRandomIndex(player->getFighters()->size());
         Bandit* target = player->getFighters()->at(targetI);
