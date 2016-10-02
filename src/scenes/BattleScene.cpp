@@ -18,7 +18,7 @@ using namespace chag;
 
 BattleScene::BattleScene() {
     scene = LevelFileReader::read("../levels/battle.level", this);
-    enemies = new vector<pair<Enemy*,GameObject*>>();
+    enemies = new enemyMap();
 
     int width = Globals::get(Globals::WINDOW_WIDTH);
     int height = Globals::get(Globals::WINDOW_HEIGHT);
@@ -84,7 +84,7 @@ void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
             Enemy* enemy = (Enemy*)action->target;
             enemy->takeDamage(action->performer->performAttack(action->attack));
             if(!enemy->isAlive()) {
-                deleteEnemyFromList(enemy);
+                enemies->erase(enemy);
                 if(enemies->size() == 0)
                     requestSceneChange(EXPLORE_SCENE);
                 else
@@ -92,7 +92,7 @@ void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
             }
         }
     }else{
-        Enemy* attacker = enemies->at(getRandomIndex(enemies->size())).first;
+        Enemy* attacker = getRandomEnemy();
         int targetI = getRandomIndex(player->getFighters()->size());
         Bandit* target = player->getFighters()->at(targetI);
         target->takeDamage(attacker->performAttack(attacker->getArbitraryAttack()));
@@ -104,15 +104,12 @@ void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
     }
 }
 
-void BattleScene::deleteEnemyFromList(Enemy *enemy) {
-    int i = 0;
-    for(auto enemyIt : *enemies) {
-        if (enemyIt.first->equals(enemy)) {
-            enemies->erase(enemies->begin() + i);
-            break;
-        }
-        i++;
-    }
+Enemy* BattleScene::getRandomEnemy() {
+    int i = getRandomIndex(enemies->size());
+    int j = 0;
+    for(auto enemy : *enemies)
+        if(i == j++)
+            return enemy.first;
 }
 
 int BattleScene::getRandomIndex(int size) {
