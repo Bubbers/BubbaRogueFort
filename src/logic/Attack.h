@@ -10,6 +10,10 @@ class GameObject;
 class AttackResult {
 public:
     AttackResult(int damage);
+    ~AttackResult() = default;
+
+    void visualEffect(chag::float3 fromPos, chag::float3 toPos, Camera *camera, std::function<void (GameObject*)> putGameObject);
+
     int damage;
 };
 
