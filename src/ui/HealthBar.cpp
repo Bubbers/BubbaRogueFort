@@ -39,7 +39,7 @@ HealthBar::HealthBar(Bandit* bandit) : bandit(bandit), PositioningLayout(Dimensi
 void HealthBar::damageTaken() {
 
     if(bar->getRenderedBackground() != nullptr) {
-        bar->getRenderedBackground()->setScale(make_vector((float)bandit->getHealth()/(float)bandit->getMaxHealth(),1.0f));
+        bar->getRenderedBackground()->setScale(chag::make_vector((float)bandit->getHealth()/(float)bandit->getMaxHealth(),1.0f));
     }
     if(bandit->getHealth() == 0)
         dead = true;
