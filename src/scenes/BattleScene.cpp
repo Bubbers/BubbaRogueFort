@@ -107,7 +107,8 @@ void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
 
             chag::float3 pos = enemies->find(enemy)->second->getAbsoluteLocation();
 
-            attackResult.visualEffect(pos, pos, getCamera(), [this] (GameObject* gob) {
+            std::shared_ptr<Camera> sharedCamera(getCamera());
+            attackResult.visualEffect(pos, pos, sharedCamera, [this] (GameObject* gob) {
                 gob->addComponent(new AnimationStateHandler(animationState));
                 scene->addTransparentObject(gob);
             });

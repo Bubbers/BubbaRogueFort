@@ -1,6 +1,8 @@
 #pragma once
 
 #include <functional>
+#include <memory>
+
 #include "linmath/float3.h"
 
 struct Stats;
@@ -12,7 +14,9 @@ public:
     AttackResult(int damage);
     ~AttackResult() = default;
 
-    void visualEffect(chag::float3 fromPos, chag::float3 toPos, Camera *camera, std::function<void (GameObject*)> putGameObject);
+    void visualEffect(chag::float3 fromPos, chag::float3 toPos,
+                      std::shared_ptr<Camera> camera,
+                      std::function<void (GameObject*)> putGameObject);
 
     int damage;
 };

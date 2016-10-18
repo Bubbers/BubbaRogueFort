@@ -2,6 +2,7 @@
 #include "Stats.h"
 
 #include "ParticleGenerator.h"
+#include "ParticleRenderer.h"
 #include "particleEffects/CircleEffect.h"
 #include "Texture.h"
 #include "ResourceManager.h"
@@ -16,17 +17,19 @@ Attack punch() {
 AttackResult::AttackResult(int damage) : damage(damage) {
 }
 
-void AttackResult::visualEffect(chag::float3 fromPos, chag::float3 toPos, Camera *camera,
+void AttackResult::visualEffect(chag::float3 fromPos, chag::float3 toPos,
+                                std::shared_ptr<Camera> camera,
                                 std::function<void(GameObject*)> putGameObject) {
     GameObject *gob = new GameObject();
     gob->setLocation(toPos);
     gob->update(0.16f);
-    Texture *texture = ResourceManager::loadAndFetchTexture("../meshes/bubba.png");
+    std::shared_ptr<Texture> texture(ResourceManager::loadAndFetchTexture("../meshes/bubba.png"));
+
+    std::shared_ptr<ParticleRenderer> partRenderer(new ParticleRenderer(texture, camera));
 
     int particles = 2000;
-    CircleEffect *circleEffect = new CircleEffect();
-    ParticleGenerator *pgen = new ParticleGenerator(texture, particles, camera,
-                                                    gob->getModelMatrix(), circleEffect);
+    std::shared_ptr<CircleEffect> circleEffect(new CircleEffect());
+    ParticleGenerator *pgen = new ParticleGenerator(particles, partRenderer, circleEffect, camera);
 
     gob->addComponent(new TimedLife(5));
     gob->addRenderComponent(pgen);
