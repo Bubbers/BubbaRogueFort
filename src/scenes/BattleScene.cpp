@@ -40,7 +40,7 @@ BattleScene::BattleScene() {
     createLight();
 
     for(int i = 0; i < 4; i++) {
-        Mesh *monsterMesh = ResourceManager::loadAndFetchMesh("../meshes/monster.obj");
+        std::shared_ptr<Mesh> monsterMesh = ResourceManager::loadAndFetchMesh("../meshes/monster.obj");
         GameObject *monster = new GameObject(monsterMesh);
         monster->setLocation(make_vector(-10.0f, 0.0f, i * 4.0f - 6.0f));
         monster->setRotation(make_quaternion_axis_angle(make_vector(0.0f, 1.0f, 0.0f), M_PI / 2));
@@ -48,7 +48,7 @@ BattleScene::BattleScene() {
         monster->addComponent(enemy);
         enemies->insert(enemies->end(),pair<Enemy*,GameObject*>(enemy,monster));
 
-        ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
+        std::shared_ptr<ShaderProgram> standardShader = ResourceManager::loadAndFetchShaderProgram(SIMPLE_SHADER_NAME, "../shader/simple.vert", "../shader/simple.frag");
         StandardRenderer *stdrenderer = new StandardRenderer(monsterMesh, monster, standardShader);
         monster->addRenderComponent(stdrenderer);
         scene->addShadowCaster(monster);
@@ -179,14 +179,14 @@ void BattleScene::sceneEntry(Player *player, Camera *camera) {
 void BattleScene::placePlayerFighters() {
     int i = 0;
     for(CrewMember* fighter : *(player->getFighters())){
-        Mesh *fighterMesh = ResourceManager::loadAndFetchMesh(fighter->getCrewType() == CrewMember::DOG ? "../meshes/dog.obj" : "../meshes/bubba.obj");
+        std::shared_ptr<Mesh> fighterMesh = ResourceManager::loadAndFetchMesh(fighter->getCrewType() == CrewMember::DOG ? "../meshes/dog.obj" : "../meshes/bubba.obj");
         GameObject *fighterObj = new GameObject(fighterMesh);
         fighterObj->setLocation(make_vector(10.0f, 0.0f, i++ * 4.0f - 6.0f));
         fighterObj->setRotation(make_quaternion_axis_angle(make_vector(0.0f, 1.0f, 0.0f), fighter->getCrewType() == CrewMember::DOG ? M_PI : -M_PI_2));
         fighterObj->addComponent(fighter);
         hud->addRelativeLayout(fighterObj,new HealthBar(fighter));
 
-        ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
+        std::shared_ptr<ShaderProgram> standardShader = ResourceManager::loadAndFetchShaderProgram(SIMPLE_SHADER_NAME, "../shader/simple.vert", "../shader/simple.frag");
         StandardRenderer *stdrenderer = new StandardRenderer(fighterMesh, fighterObj, standardShader);
         fighterObj->addRenderComponent(stdrenderer);
         scene->addShadowCaster(fighterObj);

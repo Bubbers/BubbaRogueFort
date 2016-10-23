@@ -4,6 +4,7 @@
 #include "constants.h"
 #include "../components/SceneSwitchOnCollisionComponent.h"
 #include <StandardRenderer.h>
+#include "Logger.h"
 
 using namespace chag;
 using namespace std;
@@ -12,9 +13,9 @@ LevelFileReader::LevelFileReader() {
 }
 
 void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &lines,
-                      std::unordered_map<std::string, Mesh*> &meshMap, Scene* scene, RogueFortScene *rogueFortScene) {
+                      std::unordered_map<std::string, std::shared_ptr<Mesh>> &meshMap, Scene* scene, RogueFortScene *rogueFortScene) {
 
-    ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
+    std::shared_ptr<ShaderProgram> standardShader = ResourceManager::loadAndFetchShaderProgram(SIMPLE_SHADER_NAME, "../shader/simple.vert", "../shader/simple.frag");
     for (auto lineWords : lines) {
         std::string firstWord = lineWords.front();
 
@@ -94,7 +95,7 @@ void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &
 
 Scene* LevelFileReader::read(const std::string &filename, RogueFortScene *rogueFortScene) {
     Scene* scene = new Scene();
-    std::unordered_map<std::string, Mesh*> meshMap;
+    std::unordered_map<std::string, std::shared_ptr<Mesh>> meshMap;
     std::vector<std::vector<std::string>> lines;
 
     std::string line;
@@ -109,7 +110,7 @@ Scene* LevelFileReader::read(const std::string &filename, RogueFortScene *rogueF
 
                 if (firstWord == "Mesh") {
                     // If we found a mesh we load it directly
-                    Mesh *m = ResourceManager::loadAndFetchMesh(lineWords[2]);
+                    std::shared_ptr<Mesh> m = ResourceManager::loadAndFetchMesh(lineWords[2]);
                     meshMap.insert({lineWords[1], m});
                 } else {
                     // Otherwise save it for later analysis after all meshes are loaded

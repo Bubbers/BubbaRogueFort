@@ -25,10 +25,10 @@ ExploreScene::ExploreScene(Camera* camera) : RogueFortScene() {
     this->camera = camera;
 
     /* Shader setup done once for all meshes that use it */
-    ShaderProgram* standardShader = ResourceManager::getShader(SIMPLE_SHADER_NAME);
+    std::shared_ptr<ShaderProgram> standardShader = ResourceManager::loadAndFetchShaderProgram(SIMPLE_SHADER_NAME, "../shader/simple.vert", "../shader/simple.frag");
 
     /* Load player mesh and attach it to the player GameObject */
-    Mesh *playerMesh = ResourceManager::loadAndFetchMesh("../meshes/bubba.obj");
+    std::shared_ptr<Mesh> playerMesh = ResourceManager::loadAndFetchMesh("../meshes/bubba.obj");
     // references are from the the build folder
 
     // character to move

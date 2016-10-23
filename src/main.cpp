@@ -32,6 +32,7 @@
 #include "logic/KidBandit.h"
 #include "scenes/SceneHandler.h"
 #include "logic/Player.h"
+#include "Logger.h"
 
 using namespace chag;
 

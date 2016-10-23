@@ -14,7 +14,7 @@ public:
 
 private:
     static void parseObjects(const std::vector<std::vector<std::string>> &lines,
-                          std::unordered_map<std::string, Mesh*> &meshMap,
+                          std::unordered_map<std::string, std::shared_ptr<Mesh>> &meshMap,
                           Scene* scene, RogueFortScene *rogueFortScene);
 
     static std::vector<std::string> words(const std::string& str);
