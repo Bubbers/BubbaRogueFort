@@ -134,7 +134,7 @@ void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
         target->takeDamage(attacker->performAttack(attacker->getArbitraryAttack()));
         if(!target->isAlive()) {
             player->getFighters()->erase(player->getFighters()->begin() + targetI);
-            hud->updateFighterButtons();
+            //hud->updateFighterButtons();
         }
         playersTurnElseEnemies = true;
     }
@@ -166,7 +166,7 @@ void BattleScene::sceneEntry(Player *player, Camera *camera) {
     vector<Bandit*>* enemyBandits = new vector<Bandit*>();
     for(auto enemyBandit : *enemies)
         enemyBandits->push_back(enemyBandit.first);
-    hud = new ActionMenu((std::vector<Bandit*>*)player->getFighters(),enemyBandits);
+    hud = new ActionMenu((std::vector<Bandit*>*)player->getFighters(),enemyBandits, player->getInventory());
     hud->setWorldCamera(this->camera);
     placePlayerFighters();
     for(auto enemy : *enemies)

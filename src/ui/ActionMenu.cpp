@@ -1,4 +1,5 @@
 #include "ActionMenu.h"
+#include "../logic/InventoryItem.h"
 #include <Dimension.h>
 #include <HUDGraphic.h>
 #include <PositioningLayout.h>
@@ -8,12 +9,12 @@
 #include <vector>
 #include <iostream>
 
-using namespace std;
 
-ActionMenu::ActionMenu(vector<Bandit*>* fightersInPlay, vector<Bandit*>* banditsInPlay) {
+ActionMenu::ActionMenu(std::vector<Bandit*>* fightersInPlay, std::vector<Bandit*>* banditsInPlay, std::vector<InventoryItem*>* inventory) {
 
     fighters = fightersInPlay;
     bandits = banditsInPlay;
+    this->inventory = inventory;
     font = FontManager::getInstance()->loadAndFetchFont("../fonts/Ubuntu-M.ttf",20);
 
     PositioningLayout* root = new PositioningLayout(Dimension::fromPercentage(100), Dimension::fromPercentage(100));
@@ -26,7 +27,7 @@ ActionMenu::ActionMenu(vector<Bandit*>* fightersInPlay, vector<Bandit*>* bandits
     botBar->setBackground(hudG->setBorder(3, 0, 0, 0, borderColor));
 
     buttonList = new ListLayout(ListLayout::HORIZONTAL, Dimension::fromPercentage(90),Dimension::fromPercentage(50));
-    createFighterButtons();
+    createMainButtons();
     botBar->addChild(buttonList,Dimension::fromPercentage(5),Dimension::fromPercentage(25));
 
     root->addChild(botBar, Dimension::fromPixels(0), Dimension::fromPercentagePlusPixels(100, -103));
@@ -35,91 +36,150 @@ ActionMenu::ActionMenu(vector<Bandit*>* fightersInPlay, vector<Bandit*>* bandits
 
 }
 
-void ActionMenu::updateFighterButtons() {
+void ActionMenu::createMainButtons() {
     buttonList->clearChildren();
-    createFighterButtons();
-    updateLayout();
+    Layout* fightButton = createClickButton("Fight");
+    fightButton->addClickListener([this] (int x, int y, Layout* clickedOn, bool enteringElseLeaving) -> void {
+        if(!enteringElseLeaving)
+            toFighters = true;
+    });
+    buttonList->addChild(fightButton);
+    Layout* inventoryButton = createClickButton("Inventory");
+    inventoryButton->addClickListener([this] (int x, int y, Layout* clickedOn, bool enteringElseLeaving) -> void {
+        if(!enteringElseLeaving)
+            openInventory = true;
+    });
+    buttonList->addChild(inventoryButton);
 }
 
-void ActionMenu::createFighterButtons() {
-    for(auto fighterIt : *fighters) {
-        buttonList->addChild(createActionButton(fighterIt));
-    }
-}
+void ActionMenu::createInventoryButtons() {
 
-void ActionMenu::update(float dt) {
-    HudRenderer::update(dt);
-    if(openAttackMenu != nullptr){
+    for(auto item : *inventory) {
         buttonList->clearChildren();
-        createAttacksButtons(openAttackMenu);
-        openAttackMenu = nullptr;
-        updateLayout();
-    }
-    if(backToFighters){
-        backToFighters = false;
-        buttonList->clearChildren();
-        createFighterButtons();
-        updateLayout();
-    }
-    if(attackPicked != nullptr){
-        buttonList->clearChildren();
-        createTargetButtons(attackPicked->first,attackPicked->second);
-        attackPicked = nullptr;
-        updateLayout();
-    }
-}
-
-void ActionMenu::createTargetButtons(string action, Bandit *performer) {
-    for(Bandit* bandit : *bandits){
-        if(!bandit->isAlive())
-            continue;
-        Layout* butt = createClickButton(bandit->getName());
-        butt->addClickListener([this, action, performer, bandit]
-            (int x, int y, Layout* clickedOn, bool enteringElseLeaving) -> void
-        {
-            if(!enteringElseLeaving) {
-                performedAction = new Action(performer, bandit, action);
-                backToFighters = true;
+        Layout *butt = createClickButton(item->getName());
+        butt->addClickListener([this, item] (int x, int y, Layout *clickedOn, bool enteringElseLeaving) -> void {
+            if (!enteringElseLeaving) {
+                itemPicked = item;
             }
         });
 
         buttonList->addChild(butt);
     }
+    buttonList->addChild(createClickButton("Back")->addClickListener([this](int x, int y, Layout *clickedOn, bool enteringElseLeaving) -> void {
+        if(!enteringElseLeaving)
+            toMainButtons = true;
+    }));
+
+}
+
+void ActionMenu::createFighterButtons() {
+    createTargetButtons(fighters,[this] (Bandit* target) -> void {
+        openAttackMenu = target;
+    },[this] () -> void {
+        toMainButtons = true;
+    });
 }
 
 void ActionMenu::createAttacksButtons(Bandit *fighter) {
+
     buttonList->clearChildren();
     for(string attks : fighter->getAttacks())
         buttonList->addChild(createAttackButton(fighter, attks));
     Layout* back = createClickButton("Back");
     back->addClickListener([this](int x, int y, Layout* clicked, bool enteringElseLeaving) -> void {
         if(!enteringElseLeaving)
-            backToFighters = true;
+            toFighters = true;
     });
     buttonList->addChild(back);
+
 }
 
 Layout* ActionMenu::createAttackButton(Bandit *fighter, std::string attack) {
     Layout* butt = createClickButton(attack);
-    butt->addClickListener(clickedOnAttack(fighter, attack));
-    return butt;
-}
-
-Layout::EventFunction ActionMenu::clickedOnAttack(Bandit *fighter, string attack) {
-    return [this, attack, fighter] (int x, int y, Layout* clickedOn, bool enteringElseLeaving) -> void
-    {
+    butt->addClickListener([this, attack, fighter] (int x, int y, Layout* clickedOn, bool enteringElseLeaving) -> void {
         if(!enteringElseLeaving) {
             attackPicked = new pair<string, Bandit *>(attack, fighter);
         }
-    };
-}
-
-Layout* ActionMenu::createActionButton(Bandit* fighter) {
-    Layout* butt = createClickButton(fighter->getName());
-    butt->addClickListener(openAttacksOnClick(fighter));
+    });
     return butt;
-
 }
+
+void ActionMenu::update(float dt) {
+    HudRenderer::update(dt);
+    if(toMainButtons){
+        buttonList->clearChildren();
+        createMainButtons();
+        toMainButtons = false;
+        updateLayout();
+    }
+    if(openInventory){
+        buttonList->clearChildren();
+        createInventoryButtons();
+        openInventory = false;
+        updateLayout();
+    }
+    if(itemPicked != nullptr){
+        buttonList->clearChildren();
+        InventoryItem* item = itemPicked;
+        createTargetButtons(itemPicked->getTarget() == InventoryItem::HOSTILE ? bandits : fighters, [this,item](Bandit* target) -> void {
+            item->affect(target);
+            toMainButtons = true;
+        },[this,item]() -> void {
+            openInventory = true;
+        });
+        itemPicked = nullptr;
+        updateLayout();
+    }
+    if(openAttackMenu != nullptr){
+        buttonList->clearChildren();
+        createAttacksButtons(openAttackMenu);
+        openAttackMenu = nullptr;
+        updateLayout();
+    }
+    if(toFighters){
+        toFighters = false;
+        buttonList->clearChildren();
+        createFighterButtons();
+        updateLayout();
+    }
+    if(attackPicked != nullptr){
+        buttonList->clearChildren();
+        pair<std::string,Bandit*> attack = *attackPicked;
+        createTargetButtons(bandits,[this,attack](Bandit* target) -> void {
+            performedAction = new Action(attack.second,target,attack.first);
+            toMainButtons = true;
+        },[this,attack] () -> void {
+            openAttackMenu = attack.second;
+        });
+
+        attackPicked = nullptr;
+        updateLayout();
+    }
+}
+
+void ActionMenu::createTargetButtons(std::vector<Bandit*>* targets, std::function<void (Bandit*)> onTargetClick, std::function<void (void)> back) {
+    for(Bandit* bandit : *targets){
+        if(!bandit->isAlive())
+            continue;
+        Layout* butt = createClickButton(bandit->getName());
+        butt->addClickListener([this, bandit, onTargetClick]
+            (int x, int y, Layout* clickedOn, bool enteringElseLeaving) -> void
+        {
+            if(!enteringElseLeaving) {
+                onTargetClick(bandit);
+            }
+        });
+
+        buttonList->addChild(butt);
+    }
+    Layout* backButton = createClickButton("Back");
+    backButton->addClickListener([back] (int x, int y, Layout* clickedOn, bool enteringElseLeaving) -> void {
+        if(!enteringElseLeaving)
+            back();
+    });
+    buttonList->addChild(backButton);
+}
+
 Layout* ActionMenu::createClickButton(string name) {
     TextLayout* butt = new TextLayout(name, font, Dimension::fill(), Dimension::fill());
     butt->setPadding(12);
@@ -142,14 +202,6 @@ void ActionMenu::onActionClick(int x, int y, Layout *clickedOn, bool enteredElse
     clickedOn->getGraphic()->setBackground(color);
 }
 
-Layout::EventFunction ActionMenu::openAttacksOnClick(Bandit *fighter) {
-    return [this, fighter] (int x, int y, Layout *clickedOn, bool enteredElseLeaving) -> void
-    {
-        if(!enteredElseLeaving)
-            openAttackMenu = fighter;
-    };
-}
-
 ActionMenu::Action* ActionMenu::pollAction() {
     Action* temp = performedAction;
     performedAction = nullptr;
@@ -157,4 +209,16 @@ ActionMenu::Action* ActionMenu::pollAction() {
 }
 
 ActionMenu::Action::Action(Bandit *performer, Bandit *target, string attack)
-        : performer(performer), target(target), attack(attack) { };
+        : performer(performer), target(target), attack(attack) { }
+
+ActionMenu::Action::Action(std::string item, Bandit *target)
+    : item(item), target(target) { };
+
+bool ActionMenu::Action::isAttack() {
+    return !attack.empty();
+}
+
+bool ActionMenu::Action::isItem() {
+    return !item.empty();
+}
+

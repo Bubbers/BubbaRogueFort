@@ -7,5 +7,7 @@ set(GAME_SOURCE_FILES
         logic/Player.cpp
         logic/Dog.cpp
         logic/CrewMember.cpp
+        logic/InventoryItem.cpp
+        logic/HealthPot.cpp
         ${GAME_SOURCE_FILES}
         PARENT_SCOPE)

@@ -14,9 +14,14 @@ Player::Player() {
     fighters->insert(fighters->end(),new KidBandit("Orvar"));
     fighters->insert(fighters->end(),new KidBandit("Torf"));
     fighters->insert(fighters->end(),new Dog("Brasken"));
-    inventory.insert(pair<std::string,InventoryItem*>("Health pot", new HealthPot(3)));
+    inventory = new vector<InventoryItem*>();
+    inventory->push_back(new HealthPot(3));
 }
 
 vector<CrewMember*>* Player::getFighters() {
     return fighters;
+}
+
+std::vector<InventoryItem*>* Player::getInventory() {
+    return inventory;
 }

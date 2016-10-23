@@ -5,8 +5,8 @@
 #include "HealthPot.h"
 #include "Bandit.h"
 
-HealthPot::HealthPot(int healthToGain) : healthToGain(healthToGain), InventoryItem(Target::FRIENDLY) {}
+HealthPot::HealthPot(int healthToGain) : healthToGain(healthToGain), InventoryItem(Target::FRIENDLY, "Health pot") {}
 
-void HealthPot::affect(Bandit &usedOn) {
-    usedOn.setHealth(usedOn.getHealth() + healthToGain);
+void HealthPot::affect(Bandit *usedOn) {
+    usedOn->setHealth(usedOn->getHealth() + healthToGain);
 }

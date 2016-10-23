@@ -13,7 +13,7 @@ public:
     HealthPot(int healthToGain);
 
 private:
-    virtual void affect(Bandit &usedOn);
+    virtual void affect(Bandit *usedOn);
 
 
 protected:

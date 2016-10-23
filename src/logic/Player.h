@@ -14,10 +14,11 @@ class Player {
 public:
     Player();
     std::vector<CrewMember*>* getFighters();
+    std::vector<InventoryItem*>* getInventory();
 
 private:
     std::vector<CrewMember*>* fighters;
-    std::map<std::string,InventoryItem*> inventory;
+    std::vector<InventoryItem*>* inventory;
 
 };
 

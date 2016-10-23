@@ -12,19 +12,26 @@
 #include "../logic/Bandit.h"
 
 class Font;
+class InventoryItem;
 
 class ActionMenu : public HudRenderer {
 public:
 
     struct Action{
-        Bandit* performer;
-        Bandit* target;
+
         std::string attack;
+        std::string item;
+
+        bool isAttack();
+        bool isItem();
 
         Action(Bandit *performer, Bandit *target, std::string attack);
+        Action(std::string item, Bandit* target);
     };
 
-    ActionMenu(std::vector<Bandit*>* fightersInPlay, std::vector<Bandit*>* banditsInPlay);
+
+    ActionMenu(std::vector<Bandit*>* fightersInPlay,std::vector<Bandit*>* banditsInPlay, std::vector<InventoryItem*>* inventory);
+
     virtual void update(float dt) override;
 
     /**
@@ -35,30 +42,33 @@ public:
     Action* pollAction();
 
 
-    void updateFighterButtons();
 
 private:
+    void createMainButtons();
+    void createInventoryButtons();
     void createFighterButtons();
-    Layout* createActionButton(Bandit* fighter);
     void createAttacksButtons(Bandit* fighter);
     Layout* createAttackButton(Bandit* fighter, std::string attack);
     Layout* createClickButton(std::string name);
-    void createTargetButtons(std::string action, Bandit* performer);
+    void createTargetButtons(std::vector<Bandit*>* targets, std::function<void (Bandit*)> onTargetClick, std::function<void (void)> back);
 
     Font* font;
     ListLayout* buttonList;
     std::vector<Bandit*>* fighters;
     std::vector<Bandit*>* bandits;
+    std::vector<InventoryItem*>* inventory;
 
+    bool toMainButtons = false;
+    bool openInventory = false;
+    InventoryItem* itemPicked = nullptr;
     Bandit* openAttackMenu = nullptr;
-    bool backToFighters = false;
-    std::pair<std::string, Bandit*>* attackPicked = nullptr;
+    bool toFighters = false;
+    std::pair<std::string,Bandit*>* attackPicked = nullptr;
     Action* performedAction = nullptr;
 
     static void onActionHover(int x, int y, Layout* hoveredOn, bool enteredElseLeaving);
     static void onActionClick(int x, int y, Layout* clickedOn, bool enteredElseLeaving);
-    Layout::EventFunction openAttacksOnClick(Bandit* fighter);
-    Layout::EventFunction clickedOnAttack(Bandit* fighter, std::string attack);
+
 };
 
 
