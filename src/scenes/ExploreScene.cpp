@@ -54,7 +54,7 @@ void ExploreScene::createLight() {
     DirectionalLight directionalLight = DirectionalLight();
     directionalLight.diffuseColor=make_vector(0.50f,0.50f,0.50f);
     directionalLight.specularColor=make_vector(0.50f,0.50f,0.50f);
-    directionalLight.ambientColor=make_vector(0.50f,0.50f,0.50f);
+    directionalLight.ambientColor=make_vector(0.0050f,0.0050f,0.0050f);
 
     directionalLight.direction=-make_vector(10.0f,10.0f,10.0f);
     scene->directionalLight = directionalLight;
@@ -62,7 +62,7 @@ void ExploreScene::createLight() {
     PointLight pointLight;
     pointLight.diffuseColor=make_vector(0.50f,0.50f,0.50f);
     pointLight.specularColor=make_vector(0.00f,0.00f,0.00f);
-    pointLight.ambientColor=make_vector(0.050f,0.050f,0.050f);
+    pointLight.ambientColor=make_vector(0.00050f,0.00050f,0.00050f);
     pointLight.position = make_vector(18.0f, 3.0f, 0.0f);
     scene->pointLights.push_back(pointLight);
 }
