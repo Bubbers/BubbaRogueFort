@@ -1,3 +1,4 @@
+#include <memory>
 
 #include <Globals.h>
 #include <ResourceManager.h>
@@ -19,6 +20,9 @@
 #include "particleEffects/CircleEffect.h"
 #include "Texture.h"
 #include "ResourceManager.h"
+#include "GameObject.h"
+
+#include "logic/Enemy.h"
 
 using namespace chag;
 using namespace std;
@@ -28,7 +32,7 @@ BattleScene::BattleScene() {
     doAfterAnimation = [] () {};
 
     scene = LevelFileReader::read("../levels/battle.level", this);
-    enemies = new enemyMap();
+    enemies = new EnemyMap();
 
     int width = Globals::get(Globals::WINDOW_WIDTH);
     int height = Globals::get(Globals::WINDOW_HEIGHT);
@@ -41,15 +45,15 @@ BattleScene::BattleScene() {
 
     for(int i = 0; i < 4; i++) {
         std::shared_ptr<Mesh> monsterMesh = ResourceManager::loadAndFetchMesh("../meshes/monster.obj");
-        GameObject *monster = new GameObject(monsterMesh);
+        std::shared_ptr<GameObject> monster = std::make_shared<GameObject>(monsterMesh);
         monster->setLocation(make_vector(-10.0f, 0.0f, i * 4.0f - 6.0f));
         monster->setRotation(make_quaternion_axis_angle(make_vector(0.0f, 1.0f, 0.0f), M_PI / 2));
         Enemy* enemy = new Enemy();
         monster->addComponent(enemy);
-        enemies->insert(enemies->end(),pair<Enemy*,GameObject*>(enemy,monster));
+        enemies->insert(enemies->end(), pair<Enemy*, std::shared_ptr<GameObject>>(enemy, monster));
 
         std::shared_ptr<ShaderProgram> standardShader = ResourceManager::loadAndFetchShaderProgram(SIMPLE_SHADER_NAME, "../shader/simple.vert", "../shader/simple.frag");
-        StandardRenderer *stdrenderer = new StandardRenderer(monsterMesh, monster, standardShader);
+        StandardRenderer *stdrenderer = new StandardRenderer(monsterMesh, standardShader);
         monster->addRenderComponent(stdrenderer);
         scene->addShadowCaster(monster);
     }
@@ -82,8 +86,8 @@ Camera* BattleScene::getCamera() {
 }
 
 
-void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
-    RogueFortScene::update(dt,toDelete);
+void BattleScene::update(float dt, std::vector<std::shared_ptr<GameObject>> &toDelete) {
+    RogueFortScene::update(dt, toDelete);
 
     switch (animationState->state) {
     case AnimationState::State::RUNNING:
@@ -108,7 +112,7 @@ void BattleScene::update(float dt, std::vector<GameObject *> *toDelete) {
             chag::float3 pos = enemies->find(enemy)->second->getAbsoluteLocation();
 
             std::shared_ptr<Camera> sharedCamera(getCamera());
-            attackResult.visualEffect(pos, pos, sharedCamera, [this] (GameObject* gob) {
+            attackResult.visualEffect(pos, pos, sharedCamera, [this] (std::shared_ptr<GameObject> gob) {
                 gob->addComponent(new AnimationStateHandler(animationState));
                 scene->addTransparentObject(gob);
             });
@@ -162,7 +166,7 @@ int BattleScene::getRandomIndex(int size) {
 
 void BattleScene::sceneEntry(Player *player, Camera *camera) {
     this->player = player;
-    GameObject* hudObj = new GameObject();
+    std::shared_ptr<GameObject> hudObj = std::make_shared<GameObject>();
     vector<Bandit*>* enemyBandits = new vector<Bandit*>();
     for(auto enemyBandit : *enemies)
         enemyBandits->push_back(enemyBandit.first);
@@ -170,7 +174,7 @@ void BattleScene::sceneEntry(Player *player, Camera *camera) {
     hud->setWorldCamera(this->camera);
     placePlayerFighters();
     for(auto enemy : *enemies)
-        hud->addRelativeLayout(enemy.second,new HealthBar(enemy.first));
+        hud->addRelativeLayout(enemy.second, new HealthBar(enemy.first));
     hudObj->addRenderComponent(hud);
     scene->addTransparentObject(hudObj);
 
@@ -180,14 +184,14 @@ void BattleScene::placePlayerFighters() {
     int i = 0;
     for(CrewMember* fighter : *(player->getFighters())){
         std::shared_ptr<Mesh> fighterMesh = ResourceManager::loadAndFetchMesh(fighter->getCrewType() == CrewMember::DOG ? "../meshes/dog.obj" : "../meshes/bubba.obj");
-        GameObject *fighterObj = new GameObject(fighterMesh);
+        std::shared_ptr<GameObject> fighterObj = std::make_shared<GameObject>(fighterMesh);
         fighterObj->setLocation(make_vector(10.0f, 0.0f, i++ * 4.0f - 6.0f));
         fighterObj->setRotation(make_quaternion_axis_angle(make_vector(0.0f, 1.0f, 0.0f), fighter->getCrewType() == CrewMember::DOG ? M_PI : -M_PI_2));
         fighterObj->addComponent(fighter);
         hud->addRelativeLayout(fighterObj,new HealthBar(fighter));
 
         std::shared_ptr<ShaderProgram> standardShader = ResourceManager::loadAndFetchShaderProgram(SIMPLE_SHADER_NAME, "../shader/simple.vert", "../shader/simple.frag");
-        StandardRenderer *stdrenderer = new StandardRenderer(fighterMesh, fighterObj, standardShader);
+        StandardRenderer *stdrenderer = new StandardRenderer(fighterMesh, standardShader);
         fighterObj->addRenderComponent(stdrenderer);
         scene->addShadowCaster(fighterObj);
 

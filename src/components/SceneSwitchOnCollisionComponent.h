@@ -1,26 +1,19 @@
-//
-// Created by johan on 2016-06-22.
-//
+#pragma once
 
-#ifndef BUBBAROGUEFORT_SCENESWITCHONCOLLISIONCOMPONENT_H
-#define BUBBAROGUEFORT_SCENESWITCHONCOLLISIONCOMPONENT_H
-
+#include <memory>
 
 #include <IComponent.h>
 #include <Scene.h>
 #include <Collider.h>
-#include "../scenes/RogueFortScene.h"
+#include "scenes/RogueFortScene.h"
 
 class SceneSwitchOnCollisionComponent : public IComponent{
 public:
     SceneSwitchOnCollisionComponent(RogueFortScene *scene, std::string newSceneName);
 
     void update(float dt) override;
-    virtual void beforeCollision(GameObject* collider) override ;
+    virtual void beforeCollision(std::shared_ptr<GameObject> collider) override ;
 private:
     RogueFortScene *scene;
     std::string newSceneName;
 };
-
-
-#endif //BUBBAROGUEFORT_SCENESWITCHONCOLLISIONCOMPONENT_H

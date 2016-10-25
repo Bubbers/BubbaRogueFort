@@ -1,8 +1,5 @@
-//
-// Created by simon on 2016-06-21.
-//
-
 #include "RogueFortScene.h"
+#include <memory>
 
 Scene* RogueFortScene::getScene() {
     return scene;
@@ -12,8 +9,8 @@ Camera* RogueFortScene::getCamera() {
     return camera;
 }
 
-void RogueFortScene::update(float dt, std::vector<GameObject *>* toDelete) {
-    scene->update(dt,toDelete);
+void RogueFortScene::update(float dt, std::vector<std::shared_ptr<GameObject>> &toDelete) {
+    scene->update(dt, &toDelete);
 }
 
 std::string RogueFortScene::getNewSceneName() {

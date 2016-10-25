@@ -1,10 +1,13 @@
+#include <Scene.h>
 #include "LevelFileReader.h"
 #include "ResourceManager.h"
 #include "fstream"
 #include "constants.h"
-#include "../components/SceneSwitchOnCollisionComponent.h"
+#include "components/SceneSwitchOnCollisionComponent.h"
 #include <StandardRenderer.h>
 #include "Logger.h"
+#include "GameObject.h"
+#include "scenes/RogueFortScene.h"
 
 using namespace chag;
 using namespace std;
@@ -19,7 +22,7 @@ void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &
     for (auto lineWords : lines) {
         std::string firstWord = lineWords.front();
 
-        GameObject *g;
+        std::shared_ptr<GameObject> g;
         if (firstWord == "Collider") {
             string mesh = lineWords[1];
             bool   transparent = lineWords[2] == "true";
@@ -36,11 +39,11 @@ void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &
             float sy = std::stof(lineWords[11]);
             float sz = std::stof(lineWords[12]);
 
-            g = new GameObject(meshMap[mesh]);
+            g = std::make_shared<GameObject>(meshMap[mesh]);
             g->setIdentifier(1);
 
             StandardRenderer *stdrenderer =
-                    new StandardRenderer(meshMap[mesh], g, standardShader);
+                    new StandardRenderer(meshMap[mesh], standardShader);
             g->addRenderComponent(stdrenderer);
             g->setLocation(make_vector(lx, ly, lz));
             g->setRotation(make_quaternion_axis_angle(make_vector(rx, ry, rz), ra));
@@ -68,7 +71,7 @@ void LevelFileReader::parseObjects(const std::vector<std::vector<std::string>> &
             float sy = std::stof(lineWords[12]);
             float sz = std::stof(lineWords[13]);
 
-            g = new GameObject(meshMap[mesh]);
+            g = std::make_shared<GameObject>(meshMap[mesh]);
             g->setLocation(make_vector(lx, ly, lz));
             g->setRotation(make_quaternion_axis_angle(make_vector(rx, ry, rz), ra));
             g->setScale(make_vector(sx, sy, sz));

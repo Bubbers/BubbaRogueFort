@@ -12,6 +12,7 @@
 #include "StartScene.h"
 #include "HudRenderer.h"
 #include "constants.h"
+#include "GameObject.h"
 
 
 using namespace std::placeholders;
@@ -22,7 +23,7 @@ StartScene::StartScene() {
     scene = new Scene();
 
     camera = new IdentityCamera();
-    GameObject* hud = new GameObject();
+    std::shared_ptr<GameObject> hud = std::make_shared<GameObject>();
     hudRenderer = new HudRenderer();
 
     titleFont = FontManager::getInstance()->loadAndFetchFont("../fonts/Ubuntu-M.ttf",40);

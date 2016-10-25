@@ -1,10 +1,4 @@
-//
-// Created by simon on 2016-06-21.
-//
-
-#ifndef BUBBAROGUEFORT_EXPLORESCENE_H
-#define BUBBAROGUEFORT_EXPLORESCENE_H
-
+#pragma once
 
 #include <MoveComponent.h>
 #include "RogueFortScene.h"
@@ -20,7 +14,7 @@ class ExploreScene : public RogueFortScene {
 public:
     ExploreScene(Camera* camera);
     virtual Camera* getCamera();
-    virtual void update(float dt, std::vector<GameObject*> *toDelete);
+    virtual void update(float dt, std::vector<std::shared_ptr<GameObject>> &toDelete);
     virtual void resize(int x, int y);
 
     virtual void sceneEntry(Player* player, Camera *camera);
@@ -28,11 +22,8 @@ public:
 private:
     void createLight();
     Camera* camera;
-    GameObject* player;
+    std::shared_ptr<GameObject> player;
     MoveComponentWithCollision *moveComponent;
     Collider *collider;
 
 };
-
-
-#endif //BUBBAROGUEFORT_EXPLORESCENE_H

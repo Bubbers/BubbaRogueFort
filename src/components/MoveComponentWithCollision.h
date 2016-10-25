@@ -6,10 +6,10 @@
 class MoveComponentWithCollision : public MoveComponent {
 
 public:
-    MoveComponentWithCollision(GameObject* gameObject);
-    virtual void beforeCollision(GameObject* collider) override ;
-    virtual void duringCollision(GameObject* collider) override ;
-    virtual void afterCollision(GameObject* collider) override ;
+    MoveComponentWithCollision();
+    virtual void beforeCollision(std::shared_ptr<GameObject> collider) override ;
+    virtual void duringCollision(std::shared_ptr<GameObject> collider) override ;
+    virtual void afterCollision(std::shared_ptr<GameObject> collider) override ;
 
     virtual void update(float dt) override;
 

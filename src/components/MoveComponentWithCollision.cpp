@@ -1,3 +1,5 @@
+#include <memory>
+
 #include <ControlsManager.h>
 #include <SFML/Window/Keyboard.hpp>
 #include <KeyboardButton.h>
@@ -8,27 +10,26 @@ using namespace chag;
 
 static const float3 UP_VECTOR = make_vector(0.0f, 1.0f, 0.0f);
 
-MoveComponentWithCollision::MoveComponentWithCollision(
-    GameObject* gameObject): MoveComponent(gameObject)
+MoveComponentWithCollision::MoveComponentWithCollision(): MoveComponent()
 {
      initKeyBindings();
 }
 
 void MoveComponentWithCollision::initKeyBindings() {
     ControlsManager* cm = ControlsManager::getInstance();
-    cm->addBinding(MOVE_H, new KeyboardButton(sf::Keyboard::D,sf::Keyboard::A));
-    cm->addBinding(MOVE_V, new KeyboardButton(sf::Keyboard::W,sf::Keyboard::S));
+    cm->addBinding(MOVE_H, new KeyboardButton(sf::Keyboard::D, sf::Keyboard::A));
+    cm->addBinding(MOVE_V, new KeyboardButton(sf::Keyboard::W, sf::Keyboard::S));
 }
 
-void MoveComponentWithCollision::duringCollision(GameObject* collider) {
+void MoveComponentWithCollision::duringCollision(std::shared_ptr<GameObject> collider) {
 }
 
 
-void MoveComponentWithCollision::afterCollision(GameObject* collider) {
+void MoveComponentWithCollision::afterCollision(std::shared_ptr<GameObject> collider) {
     isColliding = false;
 }
 
-void MoveComponentWithCollision::beforeCollision(GameObject *collider) {
+void MoveComponentWithCollision::beforeCollision(std::shared_ptr<GameObject> collider) {
     isColliding = true;
     setVelocity(-getVelocity());
 }

@@ -1,10 +1,12 @@
-#ifndef LEVELFILEREADER_H
-#define LEVELFILEREADER_H
+#pragma once
 
-#include <Scene.h>
+#include <vector>
 #include "unordered_map"
 #include "string"
-#include "../scenes/RogueFortScene.h"
+
+class Mesh;
+class Scene;
+class RogueFortScene;
 
 class LevelFileReader {
 public:
@@ -14,10 +16,8 @@ public:
 
 private:
     static void parseObjects(const std::vector<std::vector<std::string>> &lines,
-                          std::unordered_map<std::string, std::shared_ptr<Mesh>> &meshMap,
-                          Scene* scene, RogueFortScene *rogueFortScene);
+                             std::unordered_map<std::string, std::shared_ptr<Mesh>> &meshMap,
+                             Scene* scene, RogueFortScene *rogueFortScene);
 
     static std::vector<std::string> words(const std::string& str);
 };
-
-#endif // LEVELFILEREADER_H

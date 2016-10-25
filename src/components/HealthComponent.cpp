@@ -1,5 +1,8 @@
 #include "HealthComponent.h"
-HealthComponent::HealthComponent(int maxHealth): maxHealth(maxHealth), health(maxHealth) { }
+#include "GameObject.h"
+
+HealthComponent::HealthComponent(int maxHealth): maxHealth(maxHealth), health(maxHealth) {
+}
 
 void HealthComponent::setHealth(int newHealth) {
     health = newHealth;

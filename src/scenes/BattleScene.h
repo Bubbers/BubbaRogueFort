@@ -2,17 +2,18 @@
 
 #include "RogueFortScene.h"
 #include "ui/ActionMenu.h"
-#include "logic/Enemy.h"
 #include "logic/KidBandit.h"
-#include "scenes/AnimationState.h"
 #include <memory>
+#include "scenes/AnimationState.h"
+
+class Enemy;
 
 class BattleScene : public RogueFortScene {
 public:
     BattleScene();
 
     virtual Camera* getCamera();
-    virtual void update(float dt, std::vector<GameObject*> *toDelete);
+    virtual void update(float dt, std::vector<std::shared_ptr<GameObject>> &toDelete);
     virtual void resize(int x, int y);
 
     virtual void sceneEntry(Player* player, Camera* camera);
@@ -25,8 +26,8 @@ private:
     void deleteEnemyFromList(Enemy* enemy);
     Enemy* getRandomEnemy();
 
-    typedef std::unordered_map<Enemy*,GameObject*,Bandit::BanditHash> enemyMap;
-    enemyMap* enemies;
+    typedef std::unordered_map<Enemy*, std::shared_ptr<GameObject>, Bandit::BanditHash> EnemyMap;
+    EnemyMap* enemies;
     Player* player;
 
     ActionMenu *hud;

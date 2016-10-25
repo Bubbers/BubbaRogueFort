@@ -32,12 +32,12 @@ ExploreScene::ExploreScene(Camera* camera) : RogueFortScene() {
     // references are from the the build folder
 
     // character to move
-    player = new GameObject(playerMesh);
-    MoveComponentWithCollision *moveComponent = new MoveComponentWithCollision(player);
+    player = std::make_shared<GameObject>(playerMesh);
+    MoveComponentWithCollision *moveComponent = new MoveComponentWithCollision();
     player->addComponent(moveComponent);
 
     player->setLocation(make_vector(0.0f, 0.2f,0.0f));
-    StandardRenderer *stdrenderer = new StandardRenderer(playerMesh, player, standardShader);
+    StandardRenderer *stdrenderer = new StandardRenderer(playerMesh, standardShader);
     player->addRenderComponent(stdrenderer);
     player->setDynamic(true);
     player->setIdentifier(0);
@@ -76,13 +76,11 @@ Camera* ExploreScene::getCamera() {
 }
 
 
-void ExploreScene::update(float dt, std::vector<GameObject *> *toDelete) {
-    RogueFortScene::update(dt,toDelete);
+void ExploreScene::update(float dt, std::vector<std::shared_ptr<GameObject>> &toDelete) {
+    RogueFortScene::update(dt, toDelete);
     collider->updateCollision(scene);
-
-
 }
 
-void ExploreScene::sceneEntry(Player* player, Camera *camera) {
+void ExploreScene::sceneEntry(Player *player, Camera *camera) {
     this->camera = camera;
 }

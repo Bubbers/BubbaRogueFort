@@ -1,4 +1,5 @@
 #include "PlayerCamera.h"
+#include "GameObject.h"
 
 using namespace chag;
 

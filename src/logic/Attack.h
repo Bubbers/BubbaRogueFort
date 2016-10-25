@@ -16,7 +16,7 @@ public:
 
     void visualEffect(chag::float3 fromPos, chag::float3 toPos,
                       std::shared_ptr<Camera> camera,
-                      std::function<void (GameObject*)> putGameObject);
+                      std::function<void (std::shared_ptr<GameObject>)> putGameObject);
 
     int damage;
 };

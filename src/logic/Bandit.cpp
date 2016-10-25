@@ -2,9 +2,11 @@
 // Created by simon on 2016-06-22.
 //
 
+#include <memory>
 #include <iostream>
 #include "Bandit.h"
 #include "Stats.h"
+#include "GameObject.h"
 
 using namespace std;
 

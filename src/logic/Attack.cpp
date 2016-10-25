@@ -1,6 +1,9 @@
+#include <memory>
+
 #include "Attack.h"
 #include "Stats.h"
 
+#include "GameObject.h"
 #include "ParticleGenerator.h"
 #include "ParticleRenderer.h"
 #include "particleEffects/CircleEffect.h"
@@ -19,8 +22,9 @@ AttackResult::AttackResult(int damage) : damage(damage) {
 
 void AttackResult::visualEffect(chag::float3 fromPos, chag::float3 toPos,
                                 std::shared_ptr<Camera> camera,
-                                std::function<void(GameObject*)> putGameObject) {
-    GameObject *gob = new GameObject();
+                                std::function<void(std::shared_ptr<GameObject>)> putGameObject)
+{
+    std::shared_ptr<GameObject> gob = std::make_shared<GameObject>();
     gob->setLocation(toPos);
     gob->update(0.16f);
     std::shared_ptr<Texture> texture(ResourceManager::loadAndFetchTexture("../meshes/bubba.png"));

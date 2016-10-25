@@ -1,14 +1,9 @@
-//
-// Created by simon on 2016-06-21.
-//
+#pragma once
 
-#ifndef BUBBAROGUEFORT_ROGUEFORTSCENE_H
-#define BUBBAROGUEFORT_ROGUEFORTSCENE_H
-
-
+#include <memory>
 #include <Camera.h>
 #include <Scene.h>
-#include "../logic/Player.h"
+#include "logic/Player.h"
 
 class Scene;
 class Camera;
@@ -24,14 +19,12 @@ public:
     virtual void sceneExit(Player* player , Camera *camera)  {};
 
     virtual void resize(int x, int y){}
-    virtual void update(float dt, std::vector<GameObject*>* toDelete);
+    virtual void update(float dt, std::vector<std::shared_ptr<GameObject>> &toDelete);
 
     virtual Scene* getScene();
     virtual Camera* getCamera();
 
     std::string getNewSceneName();
-
-
 
 protected:
     Scene* scene;
@@ -40,6 +33,3 @@ protected:
     std::string newSceneName;
     bool shouldChangeScene = false;
 };
-
-
-#endif //BUBBAROGUEFORT_ROGUEFORTSCENE_H

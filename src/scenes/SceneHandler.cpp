@@ -18,7 +18,8 @@ SceneHandler::SceneHandler(Player* player, Camera* camera) {
 }
 
 void SceneHandler::idle(float timeSinceStart,float timeSinceLastCall) {
-    scene->update(timeSinceLastCall * 1000,new std::vector<GameObject*>());
+    auto emptyVector = std::vector<std::shared_ptr<GameObject>>();
+    scene->update(timeSinceLastCall * 1000, emptyVector);
     if(scene->changeScene()){
 
         scene->sceneExit(player, camera);
