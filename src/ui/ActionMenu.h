@@ -21,6 +21,8 @@ public:
 
         std::string attack;
         std::string item;
+        Bandit* performer;
+        Bandit* target;
 
         bool isAttack();
         bool isItem();

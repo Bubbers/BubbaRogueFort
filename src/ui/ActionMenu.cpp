@@ -8,7 +8,7 @@
 #include <FontManager.h>
 #include <vector>
 #include <iostream>
-
+#include "../logic/Bandit.h"
 
 ActionMenu::ActionMenu(std::vector<Bandit*>* fightersInPlay, std::vector<Bandit*>* banditsInPlay, std::vector<InventoryItem*>* inventory) {
 
@@ -21,8 +21,8 @@ ActionMenu::ActionMenu(std::vector<Bandit*>* fightersInPlay, std::vector<Bandit*
 
     PositioningLayout* botBar = new PositioningLayout(Dimension::fromPercentage(100), Dimension::fromPixels(103));
 
-    HUDGraphic::Color borderColor = HUDGraphic::Color(string("#162955"));
-    HUDGraphic::Color bgColor = HUDGraphic::Color(string("#2E4172"));
+    HUDGraphic::Color borderColor = HUDGraphic::Color(std::string("#162955"));
+    HUDGraphic::Color bgColor = HUDGraphic::Color(std::string("#2E4172"));
     HUDGraphic *hudG = new HUDGraphic(bgColor);
     botBar->setBackground(hudG->setBorder(3, 0, 0, 0, borderColor));
 
@@ -83,7 +83,7 @@ void ActionMenu::createFighterButtons() {
 void ActionMenu::createAttacksButtons(Bandit *fighter) {
 
     buttonList->clearChildren();
-    for(string attks : fighter->getAttacks())
+    for(std::string attks : fighter->getAttacks())
         buttonList->addChild(createAttackButton(fighter, attks));
     Layout* back = createClickButton("Back");
     back->addClickListener([this](int x, int y, Layout* clicked, bool enteringElseLeaving) -> void {
@@ -98,7 +98,7 @@ Layout* ActionMenu::createAttackButton(Bandit *fighter, std::string attack) {
     Layout* butt = createClickButton(attack);
     butt->addClickListener([this, attack, fighter] (int x, int y, Layout* clickedOn, bool enteringElseLeaving) -> void {
         if(!enteringElseLeaving) {
-            attackPicked = new pair<string, Bandit *>(attack, fighter);
+            attackPicked = new std::pair<std::string, Bandit *>(attack, fighter);
         }
     });
     return butt;
@@ -144,7 +144,7 @@ void ActionMenu::update(float dt) {
     }
     if(attackPicked != nullptr){
         buttonList->clearChildren();
-        pair<std::string,Bandit*> attack = *attackPicked;
+        std::pair<std::string,Bandit*> attack = *attackPicked;
         createTargetButtons(bandits,[this,attack](Bandit* target) -> void {
             performedAction = new Action(attack.second,target,attack.first);
             toMainButtons = true;
@@ -180,7 +180,7 @@ void ActionMenu::createTargetButtons(std::vector<Bandit*>* targets, std::functio
     buttonList->addChild(backButton);
 }
 
-Layout* ActionMenu::createClickButton(string name) {
+Layout* ActionMenu::createClickButton(std::string name) {
     TextLayout* butt = new TextLayout(name, font, Dimension::fill(), Dimension::fill());
     butt->setPadding(12);
     butt->setBackground(new HUDGraphic(HUDGraphic::Color("#4F628E")));
@@ -208,7 +208,7 @@ ActionMenu::Action* ActionMenu::pollAction() {
     return temp;
 }
 
-ActionMenu::Action::Action(Bandit *performer, Bandit *target, string attack)
+ActionMenu::Action::Action(Bandit *performer, Bandit *target, std::string attack)
         : performer(performer), target(target), attack(attack) { }
 
 ActionMenu::Action::Action(std::string item, Bandit *target)
